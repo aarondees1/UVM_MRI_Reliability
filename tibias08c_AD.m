@@ -74,7 +74,7 @@ for i=1:ns
     %Get FFE Tibia Bone Names
     cnams=dir(fullfile(ffe_paths(i),'*_L_SAGAR_TIB*.csv'));
     cnams={cnams.name};
-    cnams=cnams(~contains(cnams,'Duplicate')& ...
+    cnams=cnams(~contains(cnams,'dup','IgnoreCase',true)& ...
         ~contains(cnams,'MGG')&~contains(cnams,'LD'));
     idx = contains(cnams,'_RO');        % Check for _RO files
     if any(idx)
@@ -82,12 +82,12 @@ for i=1:ns
         idx = idx|~idc;
         cnams = cnams(idx);
     end
-    sd(i).FFE_cart=char(cnams);
+    sd(i).FFE.tibia.cfnam=char(cnams);
 
     %Get RHO Tibia Bone Names
     cnams=dir(fullfile(rho_paths(i),'Tibia','*_L_SAGAR_TIB*.csv'));
     cnams={cnams.name};
-    cnams=cnams(~contains(cnams,'Duplicate')& ...
+    cnams=cnams(~contains(cnams,'dup','IgnoreCase',true)& ...
         ~contains(cnams,'MGG')&~contains(cnams,'LD'));
     idx = contains(cnams,'_RO');        % Check for _RO files
     if any(idx)
@@ -95,12 +95,12 @@ for i=1:ns
         idx = idx|~idc;
         cnams = cnams(idx);
     end
-    sd(i).RHO_cart=char(cnams);
+    sd(i).RHO.tibia.cfnam=char(cnams);
 
     %Get T2S Tibia Bone Names
     cnams=dir(fullfile(t2s_paths(i),'Tibia','*_L_SAGAR_TIB*.csv'));
     cnams={cnams.name};
-    cnams=cnams(~contains(cnams,'Duplicate')& ...
+    cnams=cnams(~contains(cnams,'dup','IgnoreCase',true)& ...
         ~contains(cnams,'MGG')&~contains(cnams,'LD'));
     idx = contains(cnams,'_RO');        % Check for _RO files
     if any(idx)
@@ -108,7 +108,7 @@ for i=1:ns
         idx = idx|~idc;
         cnams = cnams(idx);
     end
-    sd(i).T2S_cart=char(cnams);
+    sd(i).T2S.tibia.cfnam=char(cnams);
 
 end
 ffe_paths=ffe_paths';
@@ -117,7 +117,7 @@ t2s_paths=t2s_paths';
 clear idc;
 
 %%
-cdir = fullfile(rdir,'Cartillage');
+cdir = fullfile(rdir,'Cartilage');
 if ~isfolder(cdir)
     mkdir(cdir);
 end
@@ -127,22 +127,22 @@ for i=1:ns
 
         % Get Tibial Coordinate System
         if j==1
-            fstr=sd(i).FFE_cart;
+            fstr=sd(i).FFE.tibia.cfnam;
             fstr=[fstr(1:6) fstr(17:19)];
             coord_path=fullfile(rdir,'Bone',[fstr csnam]);
-            cart_path=fullfile(ffe_paths(i),sd(i).FFE_cart);
+            cart_path=fullfile(ffe_paths(i),sd(i).FFE.tibia.cfnam);
 
         elseif j==2
-            fstr=sd(i).RHO_cart;
+            fstr=sd(i).RHO.tibia.cfnam;
             fstr=[fstr(1:6) fstr(17:19)];
             coord_path=fullfile(rdir,'Bone',[fstr csnam]);
-            cart_path=fullfile(rho_paths(i),'Tibia',sd(i).RHO_cart);
+            cart_path=fullfile(rho_paths(i),'Tibia',sd(i).RHO.tibia.cfnam);
         
         elseif j==3
-            fstr=sd(i).RHO_cart;
+            fstr=sd(i).T2S.tibia.cfnam;
             fstr=[fstr(1:6) fstr(17:19)];
             coord_path=fullfile(rdir,'Bone',[fstr csnam]);
-            cart_path=fullfile(t2s_paths(i),'Tibia',sd(i).T2S_cart);
+            cart_path=fullfile(t2s_paths(i),'Tibia',sd(i).T2S.tibia.cfnam);
 
         end
         tcs = load(fullfile(rdir,'Bone',[fstr csnam]),'xyzc','xyzr');
@@ -174,7 +174,7 @@ for i=1:ns
         xlabel('X (mm)','FontSize',12,'FontWeight','bold');
         ylabel('Y (mm)','FontSize',12,'FontWeight','bold');
         zlabel('Z (mm)','FontSize',12,'FontWeight','bold');
-        title({[fstr ' - MRI CS']; dtxt; ['Blue - Lateral, Green - ', ...
+        title({[fstr ' - MRI CS FIXEDPTS']; dtxt; ['Blue - Lateral, Green - ', ...
             'Medial']},'FontSize',16,'FontWeight','bold', ...
             'Interpreter','none');
         %
@@ -187,7 +187,7 @@ for i=1:ns
         xlabel('AP (mm)','FontSize',12,'FontWeight','bold');
         ylabel('Lateral (mm)','FontSize',12,'FontWeight','bold');
         zlabel('Superior (mm)','FontSize',12,'FontWeight','bold');
-        title({[fstr ' - Tibial CS']; dtxt}, ...
+        title({[fstr ' - Tibial CS FIXEDPTS']; dtxt}, ...
             'FontSize',16,'FontWeight','bold','Interpreter','none');
         %
         % Loop through Compartments (Lateral [l==1] and Medial [l==2])
@@ -291,12 +291,12 @@ for i=1:ns
         xlabel('AP (mm)','FontSize',12,'FontWeight','bold');
         ylabel('Lateral (mm)','FontSize',12,'FontWeight','bold');
         zlabel('Superior (mm)','FontSize',12,'FontWeight','bold');
-        title({[fstr ' - Tibial CS']; dtxt}, ...
+        title({[fstr ' - Tibial CS FIXEDPTS']; dtxt}, ...
             'FontSize',16,'FontWeight','bold','Interpreter','none');
         %
         print('-dpsc2','-r300','-image','-bestfit','-append',psnam);
         %
-        close([hf1 hf2]);
+       % close([hf1 hf2]);
         %
         % Save Data into a Matlab MAT File for Further Processing
         %
@@ -310,7 +310,6 @@ for i=1:ns
         %
     end
 end
-main_file=fullfile(rdir, 'Subject Bone And Cartillage Files.mat');
+main_file=fullfile(rdir, 'Subject Bone And Cartilage Files.mat');
 save (main_file, 'sd');
 return 
-return

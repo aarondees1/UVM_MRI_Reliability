@@ -82,11 +82,11 @@ snams = string(snams(idx));    % Make subject names into character array
 %
 ns = size(snams,1);     % Number of subjects
 nss = int2str(ns);
-fnamas=[];
 snam_paths=strings(ns,1);
 ffe_paths=strings(ns,1);
 rho_paths=strings(ns,1);
 t2s_paths=strings(ns,1);
+
 
 for i=1:ns
     snam_paths(i)=fullfile(ddir,snams(i));
@@ -98,49 +98,46 @@ for i=1:ns
     %Get FFE Tibia Bone Names
     bnams=dir(fullfile(ffe_paths(i),'*_L_SAG_TIB*.csv'));
     bnams={bnams.name};
-    bnams=bnams(~contains(bnams,'Duplicate')& ...
+    bnams=bnams(~contains(bnams,'dup','IgnoreCase',true)& ...
         ~contains(bnams,'MGG')&~contains(bnams,'LD'));
-    sd(i).FFE_bone=char(bnams);
+    sd(i).FFE.tibia.bfnam=char(bnams);
 
     %Get RHO Tibia Bone Names
     bnams=dir(fullfile(rho_paths(i),'Tibia','*_L_SAG_TIB*.csv'));
     bnams={bnams.name};
-    bnams=bnams(~contains(bnams,'Duplicate')& ...
+    bnams=bnams(~contains(bnams,'dup','IgnoreCase',true)& ...
         ~contains(bnams,'MGG')&~contains(bnams,'LD'));
-    sd(i).RHO_bone=char(bnams);
+    sd(i).RHO.tibia.bfnam=char(bnams);
 
     %Get T2S Tibia Bone Names
     bnams=dir(fullfile(t2s_paths(i),'Tibia','*_L_SAG_TIB*.csv'));
     bnams={bnams.name};
-    bnams=bnams(~contains(bnams,'Duplicate')& ...
+    bnams=bnams(~contains(bnams,'dup','IgnoreCase',true)& ...
         ~contains(bnams,'MGG')&~contains(bnams,'LD'));
-    sd(i).T2S_bone=char(bnams);
+    sd(i).T2S.tibia.bfnam=char(bnams);
 
     %Get AX Tibia Files
     ax_list=dir(fullfile(ffe_paths(i),'*_L_AX_TIB*.csv'));
     ax_list={ax_list.name};
     ax_list=ax_list(~contains(ax_list,'LD'));
-    sd(i).FFE_AX=char(ax_list);
+    sd(i).FFE.tibia.axfnam=char(ax_list);
 
     ax_list=dir(fullfile(rho_paths(i),'Tibia','*_L_AX_TIB*.csv'));
     ax_list={ax_list.name};
     ax_list=ax_list(~contains(ax_list,'LD'));
-    sd(i).RHO_AX=char(ax_list);
+    sd(i).RHO.tibia.axfnam=char(ax_list);
 
 
     ax_list=dir(fullfile(t2s_paths(i),'Tibia','*_L_AX_TIB*.csv'));
     ax_list={ax_list.name};
     ax_list=ax_list(~contains(ax_list,'LD'));
-    sd(i).T2S_AX=char(ax_list);
+    sd(i).T2S.tibia.axfnam=char(ax_list);
 
 
 end
 ffe_paths=ffe_paths';
 rho_paths=rho_paths';
 t2s_paths=t2s_paths';
-
-
-
 
 if isequal(snams,0)
     return;
@@ -161,21 +158,21 @@ end
 for i=1:ns
     for j=1:3
         if j==1
-            ax_path=fullfile(ffe_paths(i),sd(i).FFE_AX);
-            bone_path=fullfile(ffe_paths(i),sd(i).FFE_bone);
-            fstr=sd(i).FFE_bone;
+            ax_path=fullfile(ffe_paths(i),sd(i).FFE.tibia.axfnam);
+            fstr=sd(i).FFE.tibia.bfnam;
+            bone_path=fullfile(ffe_paths(i),sd(i).FFE.tibia.bfnam);
             fstr=[fstr(1:6) fstr(15:17)];
 
         elseif j==2
-            ax_path=fullfile(rho_paths(i),'Tibia',sd(i).RHO_AX);
-            bone_path=fullfile(rho_paths(i),'Tibia',sd(i).RHO_bone);
-            fstr=sd(i).RHO_bone;
+            ax_path=fullfile(rho_paths(i),'Tibia',sd(i).RHO.tibia.axfnam);
+            fstr=sd(i).RHO.tibia.bfnam;
+            bone_path=fullfile(rho_paths(i),'Tibia',fstr);
             fstr=[fstr(1:6) fstr(15:17)];
 
         elseif j==3
-            ax_path=fullfile(t2s_paths(i),'Tibia',sd(i).T2S_AX);
-            bone_path=fullfile(t2s_paths(i),'Tibia',sd(i).T2S_bone);
-            fstr=sd(i).T2S_bone;
+            ax_path=fullfile(t2s_paths(i),'Tibia',sd(i).T2S.tibia.axfnam);
+            fstr=sd(i).T2S.tibia.bfnam;
+            bone_path=fullfile(t2s_paths(i),'Tibia',fstr);
             fstr=[fstr(1:6) fstr(15:17)];
 
         end
@@ -192,7 +189,7 @@ for i=1:ns
         %
 
         [xyzc,xyzr,aspect,widt,height,xyzpto,prox_tib_ml,prox_tib_ap] = tibia_cs8(ax_path, ...
-            true,true);
+            false,true);
         %
         % Finish Plot
         %
@@ -284,7 +281,7 @@ for i=1:ns
                     error([' *** ERROR in tibias08b:  No coordinates for ', ...
                         'slice ' int2str(n) ' in ' cmprt ' compartment!']);
                 end
-                xyz = fix_pts(xyz,tol,iflag);    % Check for duplicates
+                xyz = fix_pts_AD(xyz,tol,iflag);    % Check for duplicates
                 npts = size(xyz,1);
                 [~,imx] = max(xyz(:,2));
                 [~,imn] = min(xyz(:,2));
@@ -385,7 +382,7 @@ for i=1:ns
         kid=fstr(1:5);
         ileg=false;
         %
-        save(mnam, 'datl','datm','kid','ileg','tril','trim','xyzc','xyzr', ...
+        save(mnam, 'datl','datm','tril','trim','xyzc','xyzr', ...
             'xyzl','xyzm','xyzpto','prox_tib_ml','prox_tib_ap');
 
         %
