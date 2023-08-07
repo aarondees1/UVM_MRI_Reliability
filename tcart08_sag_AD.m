@@ -153,7 +153,7 @@ for j=1:3
 
         % Get Range of Proximal Tibia Outline
         %
-        eval(['xyzs(' i_str ',:) = max(sd(' i_str ').RHO.tibia.prox_tib_outline)-min(sd(' i_str ').RHO.tibia.prox_tib_outline);']);
+        eval(['xyzs(' i_str ',:) = max(sd(' i_str ').' scan(j,:) '.tibia.prox_tib_outline)-min(sd(' i_str ').' scan(j,:) '.tibia.prox_tib_outline);']);
         %
     end
     % Plot and Calculate Grid
@@ -342,12 +342,9 @@ for j=1:3
 
             % Plot Sagittal Cartilage and Gridded Bone Surfaces
             %
-            if exist('hf2','var')
-                figure(hf2);
-                clf;
-            else
-                hf2 = figure;
-            end
+   
+            hf2 = figure;
+      
             hb2l = trimesh(trigli,xgl,ygl,zgl(:,1), ...
                 'LineWidth',0.25,'FaceColor','none', ...
                 'EdgeColor','k');
@@ -365,20 +362,18 @@ for j=1:3
             xlabel('X','FontSize',12,'FontWeight','bold');
             ylabel('Y','FontSize',12,'FontWeight','bold');
             zlabel('Z','FontSize',12,'FontWeight','bold');
-                  title({fstr; 'Sagittal Cartilage and Bone Meshes'}, ...
-                        'Interpreter','none','FontSize',16,'FontWeight','bold');
+            title({fstr; 'Sagittal Cartilage and Bone Meshes'}, ...
+                'Interpreter','none','FontSize',16,'FontWeight','bold');
             view(-60,12);
             axis equal;
-            if iprt
 
-                psnam = fullfile(tdir,[fstr '_tcart08_sagittal.ps']);
-                orient landscape;
-                if i==1
-                    print('-dpsc2','-r300','-fillpage',psnam);
-                else
-                    print('-dpsc2','-r300','-fillpage','-append',psnam);
-                end
-            end
+
+            psnam = fullfile(tdir,[fstr '_tcart08_sagittal_thk.pdf']);
+            orient landscape;
+            set(hf2, 'units','normalized','outerposition',[0 0 1 1]);
+            exportgraphics(hf2, psnam, "Resolution", 300);
+            close(hf2);
+
             %      pause
         end
         % %
@@ -401,12 +396,9 @@ for j=1:3
 
             % Plot Sagittal Cartilage Thicknesses
             %
-            if exist('hf4','var')
-                figure(hf4);
-                clf;
-            else
-                hf4 = figure;
-            end
+
+            hf4 = figure;
+        
             hb4l = trimesh(trigli,xgl,ygl,zgl(:,1), ...
                 'LineWidth',0.25,'FaceColor','none', ...
                 'EdgeColor','b');
@@ -441,17 +433,12 @@ for j=1:3
             xlabel('X','FontSize',12,'FontWeight','bold');
             ylabel('Y','FontSize',12,'FontWeight','bold');
             zlabel('Z','FontSize',12,'FontWeight','bold');
-                  title({fstr; 'Sagittal Cartilage Thicknesses'}, ...
-                 'Interpreter','none','FontSize',16,'FontWeight','bold');
-            if iprt
-                psnam = fullfile(tdir,[fstr '_tcart08_sagittal_thk.ps']);
-                orient landscape;
-                if i==1
-                    print('-dpsc2','-r300','-fillpage',psnam);
-                else
-                    print('-dpsc2','-r300','-fillpage','-append',psnam);
-                end
-            end
+            title({fstr; 'Sagittal Cartilage Thicknesses'}, ...
+                'Interpreter','none','FontSize',16,'FontWeight','bold');
+            orient landscape;
+            set(hf4, 'units','normalized','outerposition',[0 0 1 1]);
+            exportgraphics(hf4, psnam, "Resolution", 300, 'Append',true);
+            close(hf4);
         end                  % End if iplt
         %
 

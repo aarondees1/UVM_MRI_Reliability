@@ -44,7 +44,7 @@ iflag = true;           % Print message if duplicates found
 % Tibial Coordinate and Output PS and MAT File Names
 %
 csnam = '_tibiaCS.mat';                % Tibia coordinate system file
-psnam_suffix = '_tibias08c.ps';               % Output PS file
+psnam_suffix = '_tibias08c.pdf';               % Output PS file
 mnam_suffix = '_tibiaCart.mat';               % Output MAT file
 %
 
@@ -272,8 +272,12 @@ for i=1:ns
         %
         % Save Plots
         %
-        print(hf1,'-dpsc2','-r300','-bestfit','-append',psnam);
-        print(hf2,'-dpsc2','-r300','-bestfit','-append',psnam);
+        set(hf1, 'units','normalized','outerposition',[0 0 1 1]);
+        set(hf2, 'units','normalized','outerposition',[0 0 1 1]);
+        exportgraphics(hf1, psnam, "Resolution", 300);
+        exportgraphics(hf2, psnam, "Resolution", 300, 'Append', true);
+        close(hf1);
+        close(hf2);
         %
         % Plot Transformed Cartilage Surface Data
         %
@@ -294,9 +298,9 @@ for i=1:ns
         title({[fstr ' - Tibial CS FIXEDPTS']; dtxt}, ...
             'FontSize',16,'FontWeight','bold','Interpreter','none');
         %
-        print('-dpsc2','-r300','-image','-bestfit','-append',psnam);
-        %
-       % close([hf1 hf2]);
+        set(hf3, 'units','normalized','outerposition',[0 0 1 1]);
+        exportgraphics(hf3, psnam,"Resolution", 300, 'Append', true);
+        close(hf3);
         %
         % Save Data into a Matlab MAT File for Further Processing
         %

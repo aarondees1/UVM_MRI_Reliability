@@ -50,7 +50,7 @@ iflag = true;           % Print message if duplicates found
 %
 % Output PS and MAT File Names
 %
-psnam_suffix = '_femur08b.ps';
+psnam_suffix = '_femur08b.pdf';
 mnam_suffix = '_femurCS.mat';
 %
 % Regional Colors and Labels
@@ -226,7 +226,9 @@ axis equal;
 psnam = [fstr psnam_suffix];
 psnam = fullfile(bdir,psnam);
 %
-print('-dpsc2','-r300','-bestfit',psnam);
+set(hf1, 'units','normalized','outerposition',[0 0 1 1]);
+exportgraphics(hf1, psnam, "Resolution", 300);
+close(hf1);
 %
 % Raw Data Figure
 %
@@ -327,8 +329,12 @@ end
 %
 % Save Plots
 %
-print(hf2,'-dpsc2','-r300','-bestfit','-append',psnam);
-print(hf3,'-dpsc2','-r300','-bestfit','-append',psnam);
+set(hf2, 'units','normalized','outerposition',[0 0 1 1]);
+set(hf3, 'units','normalized','outerposition',[0 0 1 1]);
+exportgraphics(hf2, psnam,"Resolution", 300, 'Append', true);
+exportgraphics(hf3, psnam,"Resolution", 300, 'Append', true);
+close(hf2);
+close(hf3);
 %
 % Combine Regions
 %
@@ -354,7 +360,9 @@ zlabel('Superior (mm)','FontSize',12,'FontWeight','bold');
 title([fstr ' - Femoral CS'], ...
       'FontSize',16,'FontWeight','bold','Interpreter','none');
 %
-print('-dpsc2','-r300','-image','-bestfit','-append',psnam);
+set(hf4, 'units','normalized','outerposition',[0 0 1 1]);
+exportgraphics(hf4, psnam,"Resolution", 300, 'Append', true);
+close(hf4);
 %
 %Save Data into a Matlab MAT File for Further Processing
 %

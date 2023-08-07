@@ -48,7 +48,7 @@ iflag = true;           % Print message if duplicates found
 % Femur Coordinate and Output PS and MAT File Names
 %
 csnam = '_femurCS.mat';                % Femur coordinate system file
-psnam_suffix = '_femurs08c.ps';               % Output PS file
+psnam_suffix = '_femurs08c.pdf';               % Output PS file
 mnam_suffix = '_femurCart.mat';               % Output MAT file
 %
 
@@ -269,11 +269,12 @@ for i=1:ns
             clear datt;
             %
         end
-        %
-        % Save Plots
-        %
-        print(hf1,'-dpsc2','-r300','-bestfit','-append',psnam);
-        print(hf2,'-dpsc2','-r300','-bestfit','-append',psnam);
+        set(hf1, 'units','normalized','outerposition',[0 0 1 1]);
+        set(hf2, 'units','normalized','outerposition',[0 0 1 1]);
+        exportgraphics(hf1, psnam, "Resolution", 300);
+        exportgraphics(hf2, psnam, "Resolution", 300, 'Append', true);
+        close(hf1);
+        close(hf2);
         %
         % Combine Regions
         %
@@ -299,7 +300,7 @@ for i=1:ns
         title([fstr ' - Femoral CS'], ...
             'FontSize',16,'FontWeight','bold','Interpreter','none');
         %
-        print('-dpsc2','-r300','-image','-bestfit','-append',psnam);
+
         %
         % Save Data into a Matlab MAT File for Further Processing
         %
@@ -311,6 +312,9 @@ for i=1:ns
         save(mnam,'datlc','datlct','datmc','datmct','dattc','dattct','kid', ...
             'ileg','trifc','xyzfc');
         %
+        set(hf3, 'units','normalized','outerposition',[0 0 1 1]);
+        exportgraphics(hf3, psnam,"Resolution", 300, 'Append', true);
+        close(hf3);
     end
 end
 main_file=fullfile(rdir, 'Full Tibia Full Femur Subject Files.mat');
