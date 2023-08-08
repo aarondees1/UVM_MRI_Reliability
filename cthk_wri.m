@@ -4,7 +4,7 @@
 %
 %          M-File which reads the cartilage thicknesses for the MRI
 %     reliability study femurs and tibias from the MS-Excel
-%     spreadsheets writes "Femoral Thicknesses.xlsx" and 
+%     spreadsheets "Femoral Thicknesses.xlsx" and 
 %     "Tibial Thicknesses.xlsx".  The femoral cartilage thicknesses are
 %     written to six MS-Excel spreadsheets, fem_lat_ant.xlsx,
 %     fem_lat_ctr.xlsx, fem_lat_pos.xlsx, fem_med_ant.xlsx,
