@@ -212,6 +212,21 @@ A = reshape(1:size(tg),nr,nc);
 A(~(idm_ant|idl_ant)) = NaN;
 A = min(A,[],2);
 
+roi(1) = "Lateral Posterior";
+roi(2) = "Medial Posterior";
+roi(3) = "Lateral Central";
+roi(4) = "Medial Central";
+roi(5) = "Lateral Anterior";
+roi(6) = "Medial Anterior";
+
+roi_idx(:,1) = idl_pos;
+roi_idx(:,2) = idm_pos;
+roi_idx(:,3) = idl_ctr;
+roi_idx(:,4) = idm_ctr;
+roi_idx(:,5) = idl_ant;
+roi_idx(:,6) = idm_ant;
+
+ii=0;
 for i=1:ns
     %%
     % Turning the thicknesses into vectors
@@ -464,69 +479,42 @@ for i=1:ns
     coord = coord(:);
 
     % Write Thicknesses to CSV Spreadsheet
-    output = fullfile(rdir,'Femoral Thicknesses.xlsx');
-    if i==1 && exist(output,'file')==2
-        delete(output);
+    for k = 1:6
+        output = fullfile(rdir,strcat(roi(k),' Femoral Thicknesses.xlsx'));
+        if i==1 && exist(output,'file')==2
+            delete(output);
+        end
+        col_header1 = {'FFE'};
+        col_header2 = {'RHO'};
+        col_header3 = {'T2S'};
+        col_header4 = {'Thickness (mm)'};
+        col_header5 = {'Grid Coordinates'};
+
+        writematrix(fstr(1:5) ,output,'Range',['A' int2str(i+ii)])
+        writecell(col_header1,output,'Range',['A' int2str(i+1+ii)])
+        writecell(col_header4,output,'Range',['A' int2str(i+2+ii)])
+        writecell(col_header5,output,'Range',['A' int2str(i+3+ii)])
+        writecell(col_header2,output,'Range',['A' int2str(i+4+ii)])
+        writecell(col_header4,output,'Range',['A' int2str(i+5+ii)])
+        writecell(col_header5,output,'Range',['A' int2str(i+6+ii)])
+        writecell(col_header3,output,'Range',['A' int2str(i+7+ii)])
+        writecell(col_header4,output,'Range',['A' int2str(i+8+ii)])
+        writecell(col_header5,output,'Range',['A' int2str(i+9+ii)])
+
+        writematrix(cthkf_v(roi_idx(:,k))',output,'Range',['B' int2str(i+2+ii)])
+        writematrix(coord(roi_idx(:,k))',output,'Range',['B' int2str(i+3+ii)])
+        writematrix(cthkr_v(roi_idx(:,k))',output,'Range',['B' int2str(i+5+ii)])
+        writematrix(coord(roi_idx(:,k))',output,'Range',['B' int2str(i+6+ii)])  
+        writematrix(cthkt_v(roi_idx(:,k))',output,'Range',['B' int2str(i+8+ii)])
+        writematrix(coord(roi_idx(:,k))',output,'Range',['B' int2str(i+9+ii)])
+
+        %
     end
-    col_header1 = {'FFE'};
-    col_header2 = {'RHO'};
-    col_header3 = {'T2S'};
-    col_header4 = {'Lateral Posterior Thickness (mm)','Grid Coordinates',...
-        ' Medial Posterior Thickness (mm)','Grid Coordinates','Lateral Central Thickness (mm)',...
-        'Grid Coordinates', 'Medial Central Thickness','Grid Coordinates',...
-        'Lateral Anterior Thickness (mm)','Grid Coordinates','Medial Anterior Thickness (mm)',...
-        'Grid Coordinates'};
-
-    writecell(col_header1,output,'Sheet',fstr(1:5),'Range','A1')
-    writecell(col_header2,output,'Sheet',fstr(1:5),'Range','N1')
-    writecell(col_header3,output,'Sheet',fstr(1:5),'Range','AA1')
-    writecell(col_header4,output,'Sheet',fstr(1:5),'Range','A2')
-    writecell(col_header4,output,'Sheet',fstr(1:5),'Range','N2')
-    writecell(col_header4,output,'Sheet',fstr(1:5),'Range','AA2')
-
-    writematrix(cthkf_v(idl_pos),output,'Sheet',fstr(1:5),'Range','A3')
-    writematrix(coord(idl_pos),output,'Sheet',fstr(1:5),'Range','B3')
-    writematrix(cthkf_v(idm_pos),output,'Sheet',fstr(1:5),'Range','C3')
-    writematrix(coord(idm_pos),output,'Sheet',fstr(1:5),'Range','D3')
-    writematrix(cthkf_v(idl_ctr),output,'Sheet',fstr(1:5),'Range','E3')
-    writematrix(coord(idl_ctr),output,'Sheet',fstr(1:5),'Range','F3')
-    writematrix(cthkf_v(idm_ctr),output,'Sheet',fstr(1:5),'Range','G3')
-    writematrix(coord(idm_ctr),output,'Sheet',fstr(1:5),'Range','H3')
-    writematrix(cthkf_v(idl_ant),output,'Sheet',fstr(1:5),'Range','I3')
-    writematrix(coord(idl_ant),output,'Sheet',fstr(1:5),'Range','J3')
-    writematrix(cthkf_v(idm_ant),output,'Sheet',fstr(1:5),'Range','K3')
-    writematrix(coord(idm_ant),output,'Sheet',fstr(1:5),'Range','L3')
-
-    writematrix(cthkr_v(idl_pos),output,'Sheet',fstr(1:5),'Range','N3')
-    writematrix(coord(idl_pos),output,'Sheet',fstr(1:5),'Range','O3')
-    writematrix(cthkr_v(idm_pos),output,'Sheet',fstr(1:5),'Range','P3')
-    writematrix(coord(idm_pos),output,'Sheet',fstr(1:5),'Range','Q3')
-    writematrix(cthkr_v(idl_ctr),output,'Sheet',fstr(1:5),'Range','R3')
-    writematrix(coord(idl_ctr),output,'Sheet',fstr(1:5),'Range','S3')
-    writematrix(cthkr_v(idm_ctr),output,'Sheet',fstr(1:5),'Range','T3')
-    writematrix(coord(idm_ctr),output,'Sheet',fstr(1:5),'Range','U3')
-    writematrix(cthkr_v(idl_ant),output,'Sheet',fstr(1:5),'Range','V3')
-    writematrix(coord(idl_ant),output,'Sheet',fstr(1:5),'Range','W3')
-    writematrix(cthkr_v(idm_ant),output,'Sheet',fstr(1:5),'Range','X3')
-    writematrix(coord(idm_ant),output,'Sheet',fstr(1:5),'Range','Y3')
-
-    writematrix(cthkt_v(idl_pos),output,'Sheet',fstr(1:5),'Range','AA3')
-    writematrix(coord(idl_pos),output,'Sheet',fstr(1:5),'Range','AB3')
-    writematrix(cthkt_v(idm_pos),output,'Sheet',fstr(1:5),'Range','AC3')
-    writematrix(coord(idm_pos),output,'Sheet',fstr(1:5),'Range','AD3')
-    writematrix(cthkt_v(idl_ctr),output,'Sheet',fstr(1:5),'Range','AE3')
-    writematrix(coord(idl_ctr),output,'Sheet',fstr(1:5),'Range','AF3')
-    writematrix(cthkt_v(idm_ctr),output,'Sheet',fstr(1:5),'Range','AG3')
-    writematrix(coord(idm_ctr),output,'Sheet',fstr(1:5),'Range','AH3')
-    writematrix(cthkt_v(idl_ant),output,'Sheet',fstr(1:5),'Range','AI3')
-    writematrix(coord(idl_ant),output,'Sheet',fstr(1:5),'Range','AJ3')
-    writematrix(cthkt_v(idm_ant),output,'Sheet',fstr(1:5),'Range','AK3')
-    writematrix(coord(idm_ant),output,'Sheet',fstr(1:5),'Range','AL3')
-    %
     set(f,'units','normalized','outerposition',[0 0 1 1]);
     exportgraphics(f, pic_nam, "Resolution", 300, 'Append', true);
     close(f);
     %
+    ii = ii+10;
 end
 
 %%
@@ -712,44 +700,44 @@ set(f,'units','normalized','outerposition',[0 0 1 1]);
 exportgraphics(f,pic_nam, "Resolution", 300, 'Append', true);
 close(f);
 %%
-
-col_header1 = {'RHO - FFE'};
-col_header2 = {'T2S - FFE'};
-col_header4 = {'Lateral Posterior Differences (mm)','Grid Coordinates',...
-    ' Medial Posterior Differences (mm)','Grid Coordinates','Lateral Central Differences (mm)',...
-    'Grid Coordinates', 'Medial Central Differences','Grid Coordinates',...
-    'Lateral Anterior Differences (mm)','Grid Coordinates','Medial Anterior Differences (mm)',...
-    'Grid Coordinates'};
-writecell(col_header1,output,'Sheet','Difference Averages','Range','A1')
-writecell(col_header2,output,'Sheet','Difference Averages','Range','N1')
-writecell(col_header4,output,'Sheet','Difference Averages','Range','A2')
-writecell(col_header4,output,'Sheet','Difference Averages','Range','N2')
-
-writematrix(avg_rf(idl_pos),output,'Sheet','Difference Averages','Range','A3')
-writematrix(coord(idl_pos),output,'Sheet','Difference Averages','Range','B3')
-writematrix(avg_rf(idm_pos),output,'Sheet','Difference Averages','Range','C3')
-writematrix(coord(idm_pos),output,'Sheet','Difference Averages','Range','D3')
-writematrix(avg_rf(idl_ctr),output,'Sheet','Difference Averages','Range','E3')
-writematrix(coord(idl_ctr),output,'Sheet','Difference Averages','Range','F3')
-writematrix(avg_rf(idm_ctr),output,'Sheet','Difference Averages','Range','G3')
-writematrix(coord(idm_ctr),output,'Sheet','Difference Averages','Range','H3')
-writematrix(avg_rf(idl_ant),output,'Sheet','Difference Averages','Range','I3')
-writematrix(coord(idl_ant),output,'Sheet','Difference Averages','Range','J3')
-writematrix(avg_rf(idm_ant),output,'Sheet','Difference Averages','Range','K3')
-writematrix(coord(idm_ant),output,'Sheet','Difference Averages','Range','L3')
-
-writematrix(avg_tf(idl_pos),output,'Sheet','Difference Averages','Range','N3')
-writematrix(coord(idl_pos),output,'Sheet','Difference Averages','Range','O3')
-writematrix(avg_tf(idm_pos),output,'Sheet','Difference Averages','Range','P3')
-writematrix(coord(idm_pos),output,'Sheet','Difference Averages','Range','Q3')
-writematrix(avg_tf(idl_ctr),output,'Sheet','Difference Averages','Range','R3')
-writematrix(coord(idl_ctr),output,'Sheet','Difference Averages','Range','S3')
-writematrix(avg_tf(idm_ctr),output,'Sheet','Difference Averages','Range','T3')
-writematrix(coord(idm_ctr),output,'Sheet','Difference Averages','Range','U3')
-writematrix(avg_tf(idl_ant),output,'Sheet','Difference Averages','Range','V3')
-writematrix(coord(idl_ant),output,'Sheet','Difference Averages','Range','W3')
-writematrix(avg_tf(idm_ant),output,'Sheet','Difference Averages','Range','X3')
-writematrix(coord(idm_ant),output,'Sheet','Difference Averages','Range','Y3')
+%
+% col_header1 = {'RHO - FFE'};
+% col_header2 = {'T2S - FFE'};
+% col_header4 = {'Lateral Posterior Differences (mm)','Grid Coordinates',...
+%     ' Medial Posterior Differences (mm)','Grid Coordinates','Lateral Central Differences (mm)',...
+%     'Grid Coordinates', 'Medial Central Differences','Grid Coordinates',...
+%     'Lateral Anterior Differences (mm)','Grid Coordinates','Medial Anterior Differences (mm)',...
+%     'Grid Coordinates'};
+% writecell(col_header1,output,'Sheet','Difference Averages','Range','A1')
+% writecell(col_header2,output,'Sheet','Difference Averages','Range','N1')
+% writecell(col_header4,output,'Sheet','Difference Averages','Range','A2')
+% writecell(col_header4,output,'Sheet','Difference Averages','Range','N2')
+%
+% writematrix(avg_rf(idl_pos),output,'Sheet','Difference Averages','Range','A3')
+% writematrix(coord(idl_pos),output,'Sheet','Difference Averages','Range','B3')
+% writematrix(avg_rf(idm_pos),output,'Sheet','Difference Averages','Range','C3')
+% writematrix(coord(idm_pos),output,'Sheet','Difference Averages','Range','D3')
+% writematrix(avg_rf(idl_ctr),output,'Sheet','Difference Averages','Range','E3')
+% writematrix(coord(idl_ctr),output,'Sheet','Difference Averages','Range','F3')
+% writematrix(avg_rf(idm_ctr),output,'Sheet','Difference Averages','Range','G3')
+% writematrix(coord(idm_ctr),output,'Sheet','Difference Averages','Range','H3')
+% writematrix(avg_rf(idl_ant),output,'Sheet','Difference Averages','Range','I3')
+% writematrix(coord(idl_ant),output,'Sheet','Difference Averages','Range','J3')
+% writematrix(avg_rf(idm_ant),output,'Sheet','Difference Averages','Range','K3')
+% writematrix(coord(idm_ant),output,'Sheet','Difference Averages','Range','L3')
+%
+% writematrix(avg_tf(idl_pos),output,'Sheet','Difference Averages','Range','N3')
+% writematrix(coord(idl_pos),output,'Sheet','Difference Averages','Range','O3')
+% writematrix(avg_tf(idm_pos),output,'Sheet','Difference Averages','Range','P3')
+% writematrix(coord(idm_pos),output,'Sheet','Difference Averages','Range','Q3')
+% writematrix(avg_tf(idl_ctr),output,'Sheet','Difference Averages','Range','R3')
+% writematrix(coord(idl_ctr),output,'Sheet','Difference Averages','Range','S3')
+% writematrix(avg_tf(idm_ctr),output,'Sheet','Difference Averages','Range','T3')
+% writematrix(coord(idm_ctr),output,'Sheet','Difference Averages','Range','U3')
+% writematrix(avg_tf(idl_ant),output,'Sheet','Difference Averages','Range','V3')
+% writematrix(coord(idl_ant),output,'Sheet','Difference Averages','Range','W3')
+% writematrix(avg_tf(idm_ant),output,'Sheet','Difference Averages','Range','X3')
+% writematrix(coord(idm_ant),output,'Sheet','Difference Averages','Range','Y3')
 
 
 return

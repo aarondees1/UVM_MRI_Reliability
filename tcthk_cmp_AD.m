@@ -399,7 +399,17 @@ imed(:,3) = xgm>reg_med2_all;                   % Anterior region
 imed(:,2) = xgm<reg_med2_all&xgm>reg_med1_all;         % Central region
 imed(:,1) = xgm<reg_med1_all;                   % Posterior region
 
+roi(1) = "Lateral Posterior";
+roi(2) = "Medial Posterior";
+roi(3) = "Lateral Central";
+roi(4) = "Medial Central";
+roi(5) = "Lateral Anterior";
+roi(6) = "Medial Anterior";
 
+coordl = 1:size(xgl);
+coordl = coordl(:);
+coordm = 1:size(xgm);
+coordm = coordm(:);
 % rflat1 = avg_lats(2,1,i)-avg_lats(1,1,i);
 % rflat2 = avg_lats(2,2,i)-avg_lats(1,2,i);
 % rflat3 = avg_lats(2,3,i)-avg_lats(1,3,i);
@@ -414,6 +424,7 @@ imed(:,1) = xgm<reg_med1_all;                   % Posterior region
 % tfmed3 = avg_meds(3,3,i)-avg_meds(1,3,i);
 
 %%
+ii=0;
 for i = 1:ns
    
 
@@ -752,77 +763,60 @@ for i = 1:ns
     plot(axlim(1:2),[dmeanmtf-3*dstdmtf dmeanmtf-3*dstdmtf],'r--','LineWidth',1);
     title('T2S/FFE Medial Differences', ...
         'FontSize',16,'FontWeight','bold');
+    
+    jj=0;
+    % Write Thicknesses to CSV Spreadsheet
+    for k = 1:6
+        output = fullfile(rdir,strcat(roi(k),' Tibial Thicknesses.xlsx'));
+        if i==1 && exist(output,'file')==2
+            delete(output);
+        end
+        col_header1 = {'FFE'};
+        col_header2 = {'RHO'};
+        col_header3 = {'T2S'};
+        col_header4 = {'Thickness (mm)'};
+        col_header5 = {'Grid Coordinates'};
+    
+        if rem(k,2) == 1
+            cthkf = cthklf_v;
+            cthkr = cthklr_v;
+            cthkt = cthklt_v;
+            coord = coordl;
+            roi_idx = ilat;
+            jj = jj+1;
+        elseif rem(k,2) == 0
+            cthkf = cthkmf_v;
+            cthkr = cthkmr_v;
+            cthkt = cthkmt_v;
+            coord = coordm;
+            roi_idx = imed;
+        end
 
-    coordl = 1:size(xgl);
-    coordl = coordl(:);
-    coordm = 1:size(xgm);
-    coordm = coordm(:);
+        writematrix(fstr(1:5) ,output,'Range',['A' int2str(i+ii)])
+        writecell(col_header1,output,'Range',['A' int2str(i+1+ii)])
+        writecell(col_header4,output,'Range',['A' int2str(i+2+ii)])
+        writecell(col_header5,output,'Range',['A' int2str(i+3+ii)])
+        writecell(col_header2,output,'Range',['A' int2str(i+4+ii)])
+        writecell(col_header4,output,'Range',['A' int2str(i+5+ii)])
+        writecell(col_header5,output,'Range',['A' int2str(i+6+ii)])
+        writecell(col_header3,output,'Range',['A' int2str(i+7+ii)])
+        writecell(col_header4,output,'Range',['A' int2str(i+8+ii)])
+        writecell(col_header5,output,'Range',['A' int2str(i+9+ii)])
 
-    % Write Differences to CSV Spreadsheet
-    output = fullfile(rdir,'Tibial Thicknesses.xlsx');
-    if i==1 && exist(output,'file')==2
-        delete(output);
+        writematrix(cthkf(roi_idx(:,jj))',output,'Range',['B' int2str(i+2+ii)])
+        writematrix(coord(roi_idx(:,jj))',output,'Range',['B' int2str(i+3+ii)])
+        writematrix(cthkr(roi_idx(:,jj))',output,'Range',['B' int2str(i+5+ii)])
+        writematrix(coord(roi_idx(:,jj))',output,'Range',['B' int2str(i+6+ii)])  
+        writematrix(cthkt(roi_idx(:,jj))',output,'Range',['B' int2str(i+8+ii)])
+        writematrix(coord(roi_idx(:,jj))',output,'Range',['B' int2str(i+9+ii)])
+
+        %
     end
-    col_header1 = {'FFE'};
-    col_header2 = {'RHO'};
-    col_header3 = {'T2S'};
-    col_header4 = {'Lateral Posterior Thickness (mm)','Grid Coordinates',...
-        ' Medial Posterior Thickness (mm)','Grid Coordinates','Lateral Central Thickness (mm)',...
-        'Grid Coordinates', 'Medial Central Thickness','Grid Coordinates',...
-        'Lateral Anterior Thickness (mm)','Grid Coordinates','Medial Anterior Thickness (mm)',...
-        'Grid Coordinates'};
-
-    writecell(col_header1,output,'Sheet',fstr(1:5),'Range','A1')
-    writecell(col_header2,output,'Sheet',fstr(1:5),'Range','N1')
-    writecell(col_header3,output,'Sheet',fstr(1:5),'Range','AA1')
-    writecell(col_header4,output,'Sheet',fstr(1:5),'Range','A2')
-    writecell(col_header4,output,'Sheet',fstr(1:5),'Range','N2')
-    writecell(col_header4,output,'Sheet',fstr(1:5),'Range','AA2')
-
-    writematrix(cthklf_v(ilat(:,1)),output,'Sheet',fstr(1:5),'Range','A3')
-    writematrix(coordl(ilat(:,1)),output,'Sheet',fstr(1:5),'Range','B3')
-    writematrix(cthkmf_v(imed(:,1)),output,'Sheet',fstr(1:5),'Range','C3')
-    writematrix(coordm(imed(:,1)),output,'Sheet',fstr(1:5),'Range','D3')
-    writematrix(cthklf_v(ilat(:,2)),output,'Sheet',fstr(1:5),'Range','E3')
-    writematrix(coordl(ilat(:,2)),output,'Sheet',fstr(1:5),'Range','F3')
-    writematrix(cthkmf_v(imed(:,2)),output,'Sheet',fstr(1:5),'Range','G3')
-    writematrix(coordm(imed(:,2)),output,'Sheet',fstr(1:5),'Range','H3')
-    writematrix(cthklf_v(ilat(:,3)),output,'Sheet',fstr(1:5),'Range','I3')
-    writematrix(coordl(ilat(:,3)),output,'Sheet',fstr(1:5),'Range','J3')
-    writematrix(cthkmf_v(imed(:,3)),output,'Sheet',fstr(1:5),'Range','K3')
-    writematrix(coordm(imed(:,3)),output,'Sheet',fstr(1:5),'Range','L3')
-
-    writematrix(cthklr_v(ilat(:,1)),output,'Sheet',fstr(1:5),'Range','N3')
-    writematrix(coordl(ilat(:,1)),output,'Sheet',fstr(1:5),'Range','O3')
-    writematrix(cthkmr_v(imed(:,1)),output,'Sheet',fstr(1:5),'Range','P3')
-    writematrix(coordm(imed(:,1)),output,'Sheet',fstr(1:5),'Range','Q3')
-    writematrix(cthklr_v(ilat(:,2)),output,'Sheet',fstr(1:5),'Range','R3')
-    writematrix(coordl(ilat(:,2)),output,'Sheet',fstr(1:5),'Range','S3')
-    writematrix(cthkmr_v(imed(:,2)),output,'Sheet',fstr(1:5),'Range','T3')
-    writematrix(coordm(imed(:,2)),output,'Sheet',fstr(1:5),'Range','U3')
-    writematrix(cthklr_v(ilat(:,3)),output,'Sheet',fstr(1:5),'Range','V3')
-    writematrix(coordl(ilat(:,3)),output,'Sheet',fstr(1:5),'Range','W3')
-    writematrix(cthkmr_v(imed(:,3)),output,'Sheet',fstr(1:5),'Range','X3')
-    writematrix(coordm(imed(:,3)),output,'Sheet',fstr(1:5),'Range','Y3')
-
-    writematrix(cthklt_v(ilat(:,1)),output,'Sheet',fstr(1:5),'Range','AA3')
-    writematrix(coordl(ilat(:,1)),output,'Sheet',fstr(1:5),'Range','AB3')
-    writematrix(cthkmt_v(imed(:,1)),output,'Sheet',fstr(1:5),'Range','AC3')
-    writematrix(coordm(imed(:,1)),output,'Sheet',fstr(1:5),'Range','AD3')
-    writematrix(cthklt_v(ilat(:,2)),output,'Sheet',fstr(1:5),'Range','AE3')
-    writematrix(coordl(ilat(:,2)),output,'Sheet',fstr(1:5),'Range','AF3')
-    writematrix(cthkmt_v(imed(:,2)),output,'Sheet',fstr(1:5),'Range','AG3')
-    writematrix(coordm(imed(:,2)),output,'Sheet',fstr(1:5),'Range','AH3')
-    writematrix(cthklt_v(ilat(:,3)),output,'Sheet',fstr(1:5),'Range','AI3')
-    writematrix(coordl(ilat(:,3)),output,'Sheet',fstr(1:5),'Range','AJ3')
-    writematrix(cthkmt_v(imed(:,3)),output,'Sheet',fstr(1:5),'Range','AK3')
-    writematrix(coordm(imed(:,3)),output,'Sheet',fstr(1:5),'Range','AL3')
-    %
-
     set(f, 'units','normalized','outerposition',[0 0 1 1]);
     exportgraphics(f, pic_nam, "Resolution", 300, 'Append', true);
     close(f);
     %
+    ii = ii+10;
 end
 
 %%
@@ -1045,47 +1039,47 @@ close(f);
 
 
 %Take out NaNs
-
-
-
-output = fullfile(rdir,'Tibial Thicknesses.xlsx');
-
-col_header1 = {'RHO - FFE'};
-col_header2 = {'T2S - FFE'};
-col_header4 = {'Lateral Posterior Differences (mm)','Grid Coordinates',...
-    ' Medial Posterior Differences (mm)','Grid Coordinates','Lateral Central Differences (mm)',...
-    'Grid Coordinates', 'Medial Central Differences','Grid Coordinates',...
-    'Lateral Anterior Differences (mm)','Grid Coordinates','Medial Anterior Differences (mm)',...
-    'Grid Coordinates'};
-
-writecell(col_header1,output,'Sheet','Difference Averages','Range','A1')
-writecell(col_header2,output,'Sheet','Difference Averages','Range','N1')
-writecell(col_header4,output,'Sheet','Difference Averages','Range','A2')
-writecell(col_header4,output,'Sheet','Difference Averages','Range','N2')
-
-writematrix(avg_rflat(ilat(:,1)),output,'Sheet','Difference Averages','Range','A3')
-writematrix(coordl(ilat(:,1)),output,'Sheet','Difference Averages','Range','B3')
-writematrix(avg_rfmed(imed(:,1)),output,'Sheet','Difference Averages','Range','C3')
-writematrix(coordm(imed(:,1)),output,'Sheet','Difference Averages','Range','D3')
-writematrix(avg_rflat(ilat(:,2)),output,'Sheet','Difference Averages','Range','E3')
-writematrix(coordl(ilat(:,2)),output,'Sheet','Difference Averages','Range','F3')
-writematrix(avg_rfmed(imed(:,2)),output,'Sheet','Difference Averages','Range','G3')
-writematrix(coordm(imed(:,2)),output,'Sheet','Difference Averages','Range','H3')
-writematrix(avg_rflat(ilat(:,3)),output,'Sheet','Difference Averages','Range','I3')
-writematrix(coordl(ilat(:,3)),output,'Sheet','Difference Averages','Range','J3')
-writematrix(avg_rfmed(imed(:,3)),output,'Sheet','Difference Averages','Range','K3')
-writematrix(coordm(imed(:,3)),output,'Sheet','Difference Averages','Range','L3')
-
-writematrix(avg_tflat(ilat(:,1)),output,'Sheet','Difference Averages','Range','N3')
-writematrix(coordl(ilat(:,1)),output,'Sheet','Difference Averages','Range','O3')
-writematrix(avg_tfmed(imed(:,1)),output,'Sheet','Difference Averages','Range','P3')
-writematrix(coordm(imed(:,1)),output,'Sheet','Difference Averages','Range','Q3')
-writematrix(avg_tflat(ilat(:,2)),output,'Sheet','Difference Averages','Range','R3')
-writematrix(coordl(ilat(:,2)),output,'Sheet','Difference Averages','Range','S3')
-writematrix(avg_tfmed(imed(:,2)),output,'Sheet','Difference Averages','Range','T3')
-writematrix(coordm(imed(:,2)),output,'Sheet','Difference Averages','Range','U3')
-writematrix(avg_tflat(ilat(:,3)),output,'Sheet','Difference Averages','Range','V3')
-writematrix(coordl(ilat(:,3)),output,'Sheet','Difference Averages','Range','W3')
-writematrix(avg_tfmed(imed(:,3)),output,'Sheet','Difference Averages','Range','X3')
-writematrix(coordm(imed(:,3)),output,'Sheet','Difference Averages','Range','Y3')
+% 
+% 
+% 
+% output = fullfile(rdir,'Tibial Thicknesses.xlsx');
+% 
+% col_header1 = {'RHO - FFE'};
+% col_header2 = {'T2S - FFE'};
+% col_header4 = {'Lateral Posterior Differences (mm)','Grid Coordinates',...
+%     ' Medial Posterior Differences (mm)','Grid Coordinates','Lateral Central Differences (mm)',...
+%     'Grid Coordinates', 'Medial Central Differences','Grid Coordinates',...
+%     'Lateral Anterior Differences (mm)','Grid Coordinates','Medial Anterior Differences (mm)',...
+%     'Grid Coordinates'};
+% 
+% writecell(col_header1,output,'Sheet','Difference Averages','Range','A1')
+% writecell(col_header2,output,'Sheet','Difference Averages','Range','N1')
+% writecell(col_header4,output,'Sheet','Difference Averages','Range','A2')
+% writecell(col_header4,output,'Sheet','Difference Averages','Range','N2')
+% 
+% writematrix(avg_rflat(ilat(:,1)),output,'Sheet','Difference Averages','Range','A3')
+% writematrix(coordl(ilat(:,1)),output,'Sheet','Difference Averages','Range','B3')
+% writematrix(avg_rfmed(imed(:,1)),output,'Sheet','Difference Averages','Range','C3')
+% writematrix(coordm(imed(:,1)),output,'Sheet','Difference Averages','Range','D3')
+% writematrix(avg_rflat(ilat(:,2)),output,'Sheet','Difference Averages','Range','E3')
+% writematrix(coordl(ilat(:,2)),output,'Sheet','Difference Averages','Range','F3')
+% writematrix(avg_rfmed(imed(:,2)),output,'Sheet','Difference Averages','Range','G3')
+% writematrix(coordm(imed(:,2)),output,'Sheet','Difference Averages','Range','H3')
+% writematrix(avg_rflat(ilat(:,3)),output,'Sheet','Difference Averages','Range','I3')
+% writematrix(coordl(ilat(:,3)),output,'Sheet','Difference Averages','Range','J3')
+% writematrix(avg_rfmed(imed(:,3)),output,'Sheet','Difference Averages','Range','K3')
+% writematrix(coordm(imed(:,3)),output,'Sheet','Difference Averages','Range','L3')
+% 
+% writematrix(avg_tflat(ilat(:,1)),output,'Sheet','Difference Averages','Range','N3')
+% writematrix(coordl(ilat(:,1)),output,'Sheet','Difference Averages','Range','O3')
+% writematrix(avg_tfmed(imed(:,1)),output,'Sheet','Difference Averages','Range','P3')
+% writematrix(coordm(imed(:,1)),output,'Sheet','Difference Averages','Range','Q3')
+% writematrix(avg_tflat(ilat(:,2)),output,'Sheet','Difference Averages','Range','R3')
+% writematrix(coordl(ilat(:,2)),output,'Sheet','Difference Averages','Range','S3')
+% writematrix(avg_tfmed(imed(:,2)),output,'Sheet','Difference Averages','Range','T3')
+% writematrix(coordm(imed(:,2)),output,'Sheet','Difference Averages','Range','U3')
+% writematrix(avg_tflat(ilat(:,3)),output,'Sheet','Difference Averages','Range','V3')
+% writematrix(coordl(ilat(:,3)),output,'Sheet','Difference Averages','Range','W3')
+% writematrix(avg_tfmed(imed(:,3)),output,'Sheet','Difference Averages','Range','X3')
+% writematrix(coordm(imed(:,3)),output,'Sheet','Difference Averages','Range','Y3')
 return
