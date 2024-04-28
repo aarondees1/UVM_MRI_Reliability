@@ -282,6 +282,7 @@ for i=1:ns
         %
         % Get Surface Triangulation
         %
+        %datfc = chk_gap(datfc);
         trifc = mk_tri4f(datfc,15);  % Adjust angle (in degrees) to smooth mesh
         xyzfc = cell2mat(datfc);
         trifc = tri_fix2(trifc,xyzfc);

@@ -277,7 +277,7 @@ for l = 1:3
         error([' *** ERROR in femurs08b:  No coordinates for ', ...
                'slice ' int2str(n) ' in ' reg ' region!']);
       end
-      xyz = fix_pts(xyz,tol,iflag);    % Check for duplicates
+      xyz = fix_pts_AD(xyz,tol,iflag,fstr);    % Check for duplicates
       npts = size(xyz,1);
       [~,imx] = max(xyz(:,2));
       [~,imn] = min(xyz(:,2));

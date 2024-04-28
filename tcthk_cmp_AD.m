@@ -19,6 +19,7 @@ clear;
 close all;
 clc;
 grayColor = [.7 .7 .7];
+alphabet = [char(65:90)];
 
 div = uigetdir;
 ddir = fullfile(div);
@@ -399,12 +400,13 @@ imed(:,3) = xgm>reg_med2_all;                   % Anterior region
 imed(:,2) = xgm<reg_med2_all&xgm>reg_med1_all;         % Central region
 imed(:,1) = xgm<reg_med1_all;                   % Posterior region
 
-roi(1) = "Lateral Posterior";
-roi(2) = "Medial Posterior";
-roi(3) = "Lateral Central";
-roi(4) = "Medial Central";
-roi(5) = "Lateral Anterior";
-roi(6) = "Medial Anterior";
+roi(1) = "tib_lat_pos.xlsx";
+roi(2) = "tib_med_pos.xlsx";
+roi(3) = "tib_lat_ctr.xlsx";
+roi(4) = "tib_med_ctr.xlsx";
+roi(5) = "tib_lat_ant.xlsx";
+roi(6) = "tib_med_ant.xlsx";
+
 
 coordl = 1:size(xgl);
 coordl = coordl(:);
@@ -717,65 +719,88 @@ for i = 1:ns
     orient landscape;
     %
     nexttile;
-    plot(dthklrf,'k.');
+    %plot(dthklrf,'k.');
     hold on;
-    axlim = axis;
     %plot(axlim(1:2),[0 0],'k-');
+    plot1 = plot(dthklrf(ilat(:,1)),'r.');
+    plot2 = plot(dthklrf(ilat(:,2)),'.','Color','#00c04b');
+    plot3 = plot(dthklrf(ilat(:,3)),'b.');
+    ylim([-2 2]);
+    axlim = axis;
     plot(axlim(1:2),[dmeanlrf dmeanlrf],'b--','LineWidth',1);
     plot(axlim(1:2),[dmeanlrf+3*dstdlrf dmeanlrf+3*dstdlrf],'r--','LineWidth',1);
     plot(axlim(1:2),[dmeanlrf-3*dstdlrf dmeanlrf-3*dstdlrf],'r--','LineWidth',1);
-    title('Rho/FFE Lateral Differences', ...
+    title(['Rho/FFE Lateral Differences', newline, 'Max: ', num2str(dmaxlrf), ' Min: ', num2str(dminlrf)],...
         'FontSize',16,'FontWeight','bold');
+    legend([plot1, plot2, plot3], {'Posterior', 'Center', 'Anterior'});
 
 
     nexttile;
-    plot(dthkltf,'k.');
+    %plot(dthkltf,'k.');
     hold on;
-    axlim = axis;
     %plot(axlim(1:2),[0 0],'k-');
+    plot1 = plot(dthkltf(ilat(:,1)),'r.');
+    plot2 = plot(dthkltf(ilat(:,2)),'.','Color','#00c04b');
+    plot3 = plot(dthkltf(ilat(:,3)),'b.');
+    ylim([-2 2]);
+    axlim = axis;
     plot(axlim(1:2),[dmeanltf dmeanltf],'b--','LineWidth',1);
     plot(axlim(1:2),[dmeanltf+3*dstdltf dmeanltf+3*dstdltf],'r--','LineWidth',1);
     plot(axlim(1:2),[dmeanltf-3*dstdltf dmeanltf-3*dstdltf],'r--','LineWidth',1);
-    title('T2S/FFE Lateral Differences', ...
+    title(['T2S/FFE Lateral Differences', newline, 'Max: ', num2str(dmaxltf), ' Min: ', num2str(dminltf)],...
         'FontSize',16,'FontWeight','bold');
+    legend([plot1, plot2, plot3], {'Posterior', 'Center', 'Anterior'});
+
 
     %
     nexttile;
-    plot(dthkmrf,'k.');
+    %plot(dthkmrf,'k.');
     hold on;
-    axlim = axis;
     %plot(axlim(1:2),[0 0],'k-');
+    plot1 = plot(dthkmrf(imed(:,1)),'r.');
+    plot2 = plot(dthkmrf(imed(:,2)),'.','Color','#00c04b');
+    plot3 = plot(dthkmrf(imed(:,3)),'b.');
+    ylim([-2 2]);
+    axlim = axis;
     plot(axlim(1:2),[dmeanmrf dmeanmrf],'b--','LineWidth',1);
     plot(axlim(1:2),[dmeanmrf+3*dstdmrf dmeanmrf+3*dstdmrf],'r--','LineWidth',1);
     plot(axlim(1:2),[dmeanmrf-3*dstdmrf dmeanmrf-3*dstdmrf],'r--','LineWidth',1);
-    title('Rho/FFE Medial Differences', ...
+    title(['Rho/FFE Medial Differences', newline, 'Max: ', num2str(dmaxmrf), ' Min: ', num2str(dminmrf)],...
         'FontSize',16,'FontWeight','bold');
+    legend([plot1, plot2, plot3], {'Posterior', 'Center', 'Anterior'});
 
 
     %
     nexttile;
-    plot(dthkmtf,'k.');
+    %plot(dthkmtf,'k.');
     hold on;
-    axlim = axis;
     %plot(axlim(1:2),[0 0],'k-');
+    plot1 = plot(dthkmtf(imed(:,1)),'r.');
+    plot2 = plot(dthkmtf(imed(:,2)),'.','Color','#00c04b');
+    plot3 = plot(dthkmtf(imed(:,3)),'b.');
+    ylim([-2 2]);
+    axlim = axis;
     plot(axlim(1:2),[dmeanmtf dmeanmtf],'b--','LineWidth',1);
     plot(axlim(1:2),[dmeanmtf+3*dstdmtf dmeanmtf+3*dstdmtf],'r--','LineWidth',1);
     plot(axlim(1:2),[dmeanmtf-3*dstdmtf dmeanmtf-3*dstdmtf],'r--','LineWidth',1);
-    title('T2S/FFE Medial Differences', ...
+    title(['T2S/FFE Medial Differences', newline, 'Max: ', num2str(dmaxmtf), ' Min: ', num2str(dminmtf)],...
         'FontSize',16,'FontWeight','bold');
+    legend([plot1, plot2, plot3], {'Posterior', 'Center', 'Anterior'});
+
     
     jj=0;
     % Write Thicknesses to CSV Spreadsheet
     for k = 1:6
-        output = fullfile(rdir,strcat(roi(k),' Tibial Thicknesses.xlsx'));
+        output = fullfile(rdir,roi(k));
         if i==1 && exist(output,'file')==2
             delete(output);
         end
-        col_header1 = {'FFE'};
-        col_header2 = {'RHO'};
-        col_header3 = {'T2S'};
-        col_header4 = {'Thickness (mm)'};
-        col_header5 = {'Grid Coordinates'};
+     
+        col_header1 = {'Subject'};
+        col_header2 = {'ScanType'};
+        col_header3 = {'Compartment'};
+        col_header4 = {'Division'};
+        
     
         if rem(k,2) == 1
             cthkf = cthklf_v;
@@ -784,39 +809,71 @@ for i = 1:ns
             coord = coordl;
             roi_idx = ilat;
             jj = jj+1;
+            cmprt = 0; % lateral
+            if rem(jj,3) == 1
+                division = 0; % posterior
+            elseif rem(jj,3) == 2
+                division = 1; % central
+            elseif rem(jj,3) == 0
+                division = 2; % anterior
+            end
         elseif rem(k,2) == 0
             cthkf = cthkmf_v;
             cthkr = cthkmr_v;
             cthkt = cthkmt_v;
             coord = coordm;
             roi_idx = imed;
+            cmprt = 1; % medial
+            if rem(jj,3) == 1
+                division = 0; % posterior
+            elseif rem(jj,3) == 2
+                division = 1; % central
+            elseif rem(jj,3) == 0
+                division = 2; % anterior
+            end
         end
 
-        writematrix(fstr(1:5) ,output,'Range',['A' int2str(i+ii)])
-        writecell(col_header1,output,'Range',['A' int2str(i+1+ii)])
-        writecell(col_header4,output,'Range',['A' int2str(i+2+ii)])
-        writecell(col_header5,output,'Range',['A' int2str(i+3+ii)])
-        writecell(col_header2,output,'Range',['A' int2str(i+4+ii)])
-        writecell(col_header4,output,'Range',['A' int2str(i+5+ii)])
-        writecell(col_header5,output,'Range',['A' int2str(i+6+ii)])
-        writecell(col_header3,output,'Range',['A' int2str(i+7+ii)])
-        writecell(col_header4,output,'Range',['A' int2str(i+8+ii)])
-        writecell(col_header5,output,'Range',['A' int2str(i+9+ii)])
+        if i == 1
+            if size(roi_idx) < 16385 %Last Excel Column is 16,384
+                col_header5 = repmat('pt_', size(coord(roi_idx(:,jj)),1),1);
+                col_header5 = [col_header5 int2str(coord(roi_idx(:,jj)))];
+                col_header5 = string(col_header5);
+                col_header5 = col_header5';
+            else
+                error([' *** ERROR: DATA EXCEEDS TOTAL NUMBER OF COLUMNS', ...
+                    ' AVAILABLE IN EXCEL SHEET']);
+            end
 
-        writematrix(cthkf(roi_idx(:,jj))',output,'Range',['B' int2str(i+2+ii)])
-        writematrix(coord(roi_idx(:,jj))',output,'Range',['B' int2str(i+3+ii)])
-        writematrix(cthkr(roi_idx(:,jj))',output,'Range',['B' int2str(i+5+ii)])
-        writematrix(coord(roi_idx(:,jj))',output,'Range',['B' int2str(i+6+ii)])  
-        writematrix(cthkt(roi_idx(:,jj))',output,'Range',['B' int2str(i+8+ii)])
-        writematrix(coord(roi_idx(:,jj))',output,'Range',['B' int2str(i+9+ii)])
-
+            writecell(col_header1,output,'Range','A1')
+            writecell(col_header2,output,'Range','B1')
+            writecell(col_header3,output,'Range','C1')
+            writecell(col_header4,output,'Range','D1')
+            writematrix(col_header5,output, 'Range','E1')
+        end
+        
+        
+        writematrix(str2double(fstr(1:3)) ,output,'Range',['A' int2str(i+1+ii)])
+        writematrix(0,output,'Range',['B' int2str(i+1+ii)]) %FFE
+        writematrix(cmprt,output,'Range',['C' int2str(i+1+ii)])
+        writematrix(division,output,'Range',['D' int2str(i+1+ii)])
+        writematrix(cthkf(roi_idx(:,jj))',output,'Range',['E' int2str(i+1+ii)])
+        writematrix(str2double(fstr(1:3)) ,output,'Range',['A' int2str(i+2+ii)])
+        writematrix(1,output,'Range',['B' int2str(i+2+ii)]) %RHO
+        writematrix(cmprt,output,'Range',['C' int2str(i+2+ii)])
+        writematrix(division,output,'Range',['D' int2str(i+2+ii)])
+        writematrix(cthkr(roi_idx(:,jj))',output,'Range',['E' int2str(i+2+ii)])
+        writematrix(str2double(fstr(1:3)) ,output,'Range',['A' int2str(i+3+ii)])
+        writematrix(2,output,'Range',['B' int2str(i+3+ii)]) %T2S
+        writematrix(cmprt,output,'Range',['C' int2str(i+3+ii)])
+        writematrix(division,output,'Range',['D' int2str(i+3+ii)])
+        writematrix(cthkt(roi_idx(:,jj))',output,'Range',['E' int2str(i+3+ii)])
         %
     end
     set(f, 'units','normalized','outerposition',[0 0 1 1]);
     exportgraphics(f, pic_nam, "Resolution", 300, 'Append', true);
     close(f);
     %
-    ii = ii+10;
+    ii = ii+2;
 end
 
 %%

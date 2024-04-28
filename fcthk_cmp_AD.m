@@ -212,12 +212,12 @@ A = reshape(1:size(tg),nr,nc);
 A(~(idm_ant|idl_ant)) = NaN;
 A = min(A,[],2);
 
-roi(1) = "Lateral Posterior";
-roi(2) = "Medial Posterior";
-roi(3) = "Lateral Central";
-roi(4) = "Medial Central";
-roi(5) = "Lateral Anterior";
-roi(6) = "Medial Anterior";
+roi(1) = "fem_lat_pos.xlsx";
+roi(2) = "fem_med_pos.xlsx";
+roi(3) = "fem_lat_ctr.xlsx";
+roi(4) = "fem_med_ctr.xlsx";
+roi(5) = "fem_lat_ant.xlsx";
+roi(6) = "fem_med_ant.xlsx";
 
 roi_idx(:,1) = idl_pos;
 roi_idx(:,2) = idm_pos;
@@ -225,6 +225,9 @@ roi_idx(:,3) = idl_ctr;
 roi_idx(:,4) = idm_ctr;
 roi_idx(:,5) = idl_ant;
 roi_idx(:,6) = idm_ant;
+
+coord = 1:size(tg);
+coord = coord(:);
 
 ii=0;
 for i=1:ns
@@ -473,48 +476,79 @@ for i=1:ns
     title('T2S/FFE Differences', ...
         'FontSize',16,'FontWeight','bold');
 
-
-
-    coord = 1:size(tg);
-    coord = coord(:);
-
+    jj = 0;
     % Write Thicknesses to CSV Spreadsheet
     for k = 1:6
-        output = fullfile(rdir,strcat(roi(k),' Femoral Thicknesses.xlsx'));
+        output = fullfile(rdir,roi(k));
         if i==1 && exist(output,'file')==2
             delete(output);
         end
-        col_header1 = {'FFE'};
-        col_header2 = {'RHO'};
-        col_header3 = {'T2S'};
-        col_header4 = {'Thickness (mm)'};
-        col_header5 = {'Grid Coordinates'};
+        col_header1 = {'Subject'};
+        col_header2 = {'ScanType'};
+        col_header3 = {'Compartment'};
+        col_header4 = {'Division'};
+        
+        if rem(k,2) == 1
+            jj = jj+1;
+            cmprt = 0;
+            if rem(jj,3) == 1
+                division = 0;
+            elseif rem(jj,3) == 2
+                division = 1;
+            elseif rem(jj,3) == 0
+                division = 2;
+            end
+        elseif rem(k,2) == 0
+            cmprt = 1;
+            if rem(jj,3) == 1
+                division = 0;
+            elseif rem(jj,3) == 2
+                division = 1;
+            elseif rem(jj,3) == 0
+                division = 2;
+            end
+        end
 
-        writematrix(fstr(1:5) ,output,'Range',['A' int2str(i+ii)])
-        writecell(col_header1,output,'Range',['A' int2str(i+1+ii)])
-        writecell(col_header4,output,'Range',['A' int2str(i+2+ii)])
-        writecell(col_header5,output,'Range',['A' int2str(i+3+ii)])
-        writecell(col_header2,output,'Range',['A' int2str(i+4+ii)])
-        writecell(col_header4,output,'Range',['A' int2str(i+5+ii)])
-        writecell(col_header5,output,'Range',['A' int2str(i+6+ii)])
-        writecell(col_header3,output,'Range',['A' int2str(i+7+ii)])
-        writecell(col_header4,output,'Range',['A' int2str(i+8+ii)])
-        writecell(col_header5,output,'Range',['A' int2str(i+9+ii)])
+        if i == 1
+            if sum(roi_idx(:,k)) < 16385 %Last Excel Column is 16,384
+                col_header5 = repmat('pt_', size(coord(roi_idx(:,k)),1),1);
+                col_header5 = [col_header5 int2str(coord(roi_idx(:,k)))];
+                col_header5 = string(col_header5);
+                col_header5 = col_header5';
+            else
+                error([' *** ERROR: DATA EXCEEDS TOTAL NUMBER OF COLUMNS', ...
+                    ' AVAILABLE IN EXCEL SHEET']);
+            end
 
-        writematrix(cthkf_v(roi_idx(:,k))',output,'Range',['B' int2str(i+2+ii)])
-        writematrix(coord(roi_idx(:,k))',output,'Range',['B' int2str(i+3+ii)])
-        writematrix(cthkr_v(roi_idx(:,k))',output,'Range',['B' int2str(i+5+ii)])
-        writematrix(coord(roi_idx(:,k))',output,'Range',['B' int2str(i+6+ii)])  
-        writematrix(cthkt_v(roi_idx(:,k))',output,'Range',['B' int2str(i+8+ii)])
-        writematrix(coord(roi_idx(:,k))',output,'Range',['B' int2str(i+9+ii)])
+            writecell(col_header1,output,'Range','A1')
+            writecell(col_header2,output,'Range','B1')
+            writecell(col_header3,output,'Range','C1')
+            writecell(col_header4,output,'Range','D1')
+            writematrix(col_header5,output, 'Range','E1')
+        end
 
+        writematrix(str2double(fstr(1:3)) ,output,'Range',['A' int2str(i+1+ii)])
+        writematrix(0,output,'Range',['B' int2str(i+1+ii)])
+        writematrix(cmprt,output,'Range',['C' int2str(i+1+ii)])
+        writematrix(division,output,'Range',['D' int2str(i+1+ii)])
+        writematrix(cthkf_v(roi_idx(:,k))',output,'Range',['E' int2str(i+1+ii)])
+        writematrix(str2double(fstr(1:3)) ,output,'Range',['A' int2str(i+2+ii)])
+        writematrix(1,output,'Range',['B' int2str(i+2+ii)])
+        writematrix(cmprt,output,'Range',['C' int2str(i+2+ii)])
+        writematrix(division,output,'Range',['D' int2str(i+2+ii)])
+        writematrix(cthkr_v(roi_idx(:,k))',output,'Range',['E' int2str(i+2+ii)])
+        writematrix(str2double(fstr(1:3)) ,output,'Range',['A' int2str(i+3+ii)])
+        writematrix(2,output,'Range',['B' int2str(i+3+ii)])
+        writematrix(cmprt,output,'Range',['C' int2str(i+3+ii)])
+        writematrix(division,output,'Range',['D' int2str(i+3+ii)])
+        writematrix(cthkt_v(roi_idx(:,k))',output,'Range',['E' int2str(i+3+ii)]) 
         %
     end
     set(f,'units','normalized','outerposition',[0 0 1 1]);
     exportgraphics(f, pic_nam, "Resolution", 300, 'Append', true);
     close(f);
     %
-    ii = ii+10;
+    ii = ii+2;
 end
 
 %%

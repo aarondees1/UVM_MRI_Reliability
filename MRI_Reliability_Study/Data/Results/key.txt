@@ -1,0 +1,5 @@
+Column  1 (A):  Subject - subject number (10 values between 1-13)
+Column  2 (B):  ScanType - MRI scan type code: 0 - FFE scans 1 - T1rho scans and 2 - T2* scans
+Column  3 (C):  Compartment Division - compartment code: 0 - lateral compartment and 1 - medial compartment
+Column  4 (D):  Division - division (region) code: 0 - posterior, 1 - central, and 2 - anterior (/trochlea for femur)
+Column  5 (E) and above:  Pt_* - grid point numbers
