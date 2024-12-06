@@ -82,9 +82,9 @@ t2s_paths=strings(ns,1);
 % Check for Axial Plane File
 %
 for i=1:ns
-    ffe_paths(i)=fullfile(sd(i).folder,'Visit2','FFE');
-    rho_paths(i)=fullfile(sd(i).folder,'Visit2','RHO');
-    t2s_paths(i)=fullfile(sd(i).folder,'Visit2','T2S');
+    ffe_paths(i)=fullfile(sd(i).folder,'Visit 2','FFE');
+    rho_paths(i)=fullfile(sd(i).folder,'Visit 2','RHO');
+    t2s_paths(i)=fullfile(sd(i).folder,'Visit 2','T2S');
    
     %Get FFE Femur Bone Names
     bnams=dir(fullfile(ffe_paths(i),'*_L_SAG_FEM*.csv'));

@@ -77,16 +77,16 @@ ffe_paths=strings(ns,1);
 rho_paths=strings(ns,1);
 t2s_paths=strings(ns,1);
 for i=1:ns
-    ffe_paths(i)=fullfile(sd(i).folder,'Visit2','FFE');
-    rho_paths(i)=fullfile(sd(i).folder,'Visit2','RHO');
-    t2s_paths(i)=fullfile(sd(i).folder,'Visit2','T2S');
+    ffe_paths(i)=fullfile(sd(i).folder,'Visit 2','FFE');
+    rho_paths(i)=fullfile(sd(i).folder,'Visit 2','RHO');
+    t2s_paths(i)=fullfile(sd(i).folder,'Visit 2','T2S');
 
     %Get FFE Femur Bone Names
     cnams=dir(fullfile(ffe_paths(i),'*_L_SAGAR_FEM*.csv'));
     cnams={cnams.name};
     cnams=cnams(~contains(cnams,'dup','IgnoreCase',true)& ...
-        ~contains(cnams,'MGG')&~contains(cnams,'LD'));
-    idx = contains(cnams,'_RO');        % Check for _RO files
+        ~contains(cnams,'MGG')&~contains(cnams,'LD')&~contains(cnams,'RO.'));
+    idx = contains(cnams,'_RO2');        % Check for _RO files
     if any(idx)
         idc = contains(cnams,'SAGAR');
         idx = idx|~idc;
@@ -98,8 +98,8 @@ for i=1:ns
     cnams=dir(fullfile(rho_paths(i),'Femur','*_L_SAGAR_FEM*.csv'));
     cnams={cnams.name};
     cnams=cnams(~contains(cnams,'dup','IgnoreCase',true)& ...
-        ~contains(cnams,'MGG')&~contains(cnams,'LD'));
-    idx = contains(cnams,'_RO');        % Check for _RO files
+        ~contains(cnams,'MGG')&~contains(cnams,'LD')&~contains(cnams,'RO.'));
+    idx = contains(cnams,'_RO2');        % Check for _RO files
     if any(idx)
         idc = contains(cnams,'SAGAR');
         idx = idx|~idc;
@@ -111,8 +111,8 @@ for i=1:ns
     cnams=dir(fullfile(t2s_paths(i),'Femur','*_L_SAGAR_FEM*.csv'));
     cnams={cnams.name};
     cnams=cnams(~contains(cnams,'dup','IgnoreCase',true)& ...
-        ~contains(cnams,'MGG')&~contains(cnams,'LD'));
-    idx = contains(cnams,'_RO');        % Check for _RO files
+        ~contains(cnams,'MGG')&~contains(cnams,'LD')&~contains(cnams,'RO.'));
+    idx = contains(cnams,'_RO2');        % Check for _RO files
     if any(idx)
         idc = contains(cnams,'SAGAR');
         idx = idx|~idc;

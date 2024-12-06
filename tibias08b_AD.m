@@ -90,9 +90,9 @@ t2s_paths=strings(ns,1);
 
 for i=1:ns
     snam_paths(i)=fullfile(ddir,snams(i));
-    ffe_paths(i)=fullfile(snam_paths(i),'Visit2','FFE');
-    rho_paths(i)=fullfile(snam_paths(i),'Visit2','RHO');
-    t2s_paths(i)=fullfile(snam_paths(i),'Visit2','T2S');
+    ffe_paths(i)=fullfile(snam_paths(i),'Visit 2','FFE');
+    rho_paths(i)=fullfile(snam_paths(i),'Visit 2','RHO');
+    t2s_paths(i)=fullfile(snam_paths(i),'Visit 2','T2S');
     sd(i).folder=char(snam_paths(i));
 
     %Get FFE Tibia Bone Names

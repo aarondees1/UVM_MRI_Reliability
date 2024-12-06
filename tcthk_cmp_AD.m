@@ -500,19 +500,19 @@ for i = 1:ns
     clim([0 6]);
     xlim([-30 30]);
     ylim([-40 40]);
-    scatter(xgl,ygl,4,".",'CData', grayColor);
-    scatter(xgm,ygm,4,".",'CData', grayColor);
+    % scatter(xgl,ygl,4,".",'CData', grayColor);
+    % scatter(xgm,ygm,4,".",'CData', grayColor);
     axlim=axis;
     plot([reg_lat1_all reg_lat1_all],[axlim(4) 0],"k");
     plot([reg_lat2_all reg_lat2_all],[axlim(4) 0],"k");
     plot([reg_med1_all reg_med1_all],[0 axlim(3)],"k");
     plot([reg_med2_all reg_med2_all],[0 axlim(3)],"k");
-    text(-15,20,num2str(avg_lats(2,1)));
-    text(-4,20,num2str(avg_lats(2,2)));
-    text(7,20,num2str(avg_lats(2,3)));
-    text(-13,-20,num2str(avg_meds(2,1)));
-    text(0,-20,num2str(avg_meds(2,2)));
-    text(13,-20,num2str(avg_meds(2,3)));
+    % text(-15,20,num2str(avg_lats(2,1)));
+    % text(-4,20,num2str(avg_lats(2,2)));
+    % text(7,20,num2str(avg_lats(2,3)));
+    % text(-13,-20,num2str(avg_meds(2,1)));
+    % text(0,-20,num2str(avg_meds(2,2)));
+    % text(13,-20,num2str(avg_meds(2,3)));
 
 
     %
@@ -537,19 +537,19 @@ for i = 1:ns
     clim([0 6]);
     xlim([-30 30]);
     ylim([-40 40]);
-    scatter(xgl,ygl,4,".",'CData', grayColor);
-    scatter(xgm,ygm,4,".",'CData', grayColor);
+    % scatter(xgl,ygl,4,".",'CData', grayColor);
+    % scatter(xgm,ygm,4,".",'CData', grayColor);
     axlim=axis;
     plot([reg_lat1_all reg_lat1_all],[axlim(4) 0],"k");
     plot([reg_lat2_all reg_lat2_all],[axlim(4) 0],"k");
     plot([reg_med1_all reg_med1_all],[0 axlim(3)],"k");
     plot([reg_med2_all reg_med2_all],[0 axlim(3)],"k");
-    text(-15,20,num2str(avg_lats(1,1)));
-    text(-4,20,num2str(avg_lats(1,2)));
-    text(7,20,num2str(avg_lats(1,3)));
-    text(-13,-20,num2str(avg_meds(1,1)));
-    text(0,-20,num2str(avg_meds(1,2)));
-    text(13,-20,num2str(avg_meds(1,3)));
+    % text(-15,20,num2str(avg_lats(1,1)));
+    % text(-4,20,num2str(avg_lats(1,2)));
+    % text(7,20,num2str(avg_lats(1,3)));
+    % text(-13,-20,num2str(avg_meds(1,1)));
+    % text(0,-20,num2str(avg_meds(1,2)));
+    % text(13,-20,num2str(avg_meds(1,3)));
 
 
     hf3=nexttile(5,[1 2]);
@@ -573,24 +573,27 @@ for i = 1:ns
     clim([0 6]);
     xlim([-30 30]);
     ylim([-40 40]);
-    scatter(xgl,ygl,4,".",'CData', grayColor);
-    scatter(xgm,ygm,4,".",'CData', grayColor);
+    % scatter(xgl,ygl,4,".",'CData', grayColor);
+    % scatter(xgm,ygm,4,".",'CData', grayColor);
     axlim=axis;
     plot([reg_lat1_all reg_lat1_all],[axlim(4) 0],"k");
     plot([reg_lat2_all reg_lat2_all],[axlim(4) 0],"k");
     plot([reg_med1_all reg_med1_all],[0 axlim(3)],"k");
     plot([reg_med2_all reg_med2_all],[0 axlim(3)],"k");
-    text(-15,20,num2str(avg_lats(3,1)));
-    text(-4,20,num2str(avg_lats(3,2)));
-    text(7,20,num2str(avg_lats(3,3)));
-    text(-13,-20,num2str(avg_meds(3,1)));
-    text(0,-20,num2str(avg_meds(3,2)));
-    text(13,-20,num2str(avg_meds(3,3)));
+    % text(-15,20,num2str(avg_lats(3,1)));
+    % text(-4,20,num2str(avg_lats(3,2)));
+    % text(7,20,num2str(avg_lats(3,3)));
+    % text(-13,-20,num2str(avg_meds(3,1)));
+    % text(0,-20,num2str(avg_meds(3,2)));
+    % text(13,-20,num2str(avg_meds(3,3)));
     %
 
-    colormap(hf1, 'jet(12)');
-    colormap(hf2, 'jet(12)');
-    colormap(hf3, 'jet(12)');
+    % colormap(hf1, 'jet(12)');
+    % colormap(hf2, 'jet(12)');
+    % colormap(hf3, 'jet(12)');
+    colormap(hf1, 'jet');
+    colormap(hf2, 'jet');
+    colormap(hf3, 'jet');
     %
 
     hf4=nexttile(7,[1 3]);
@@ -607,12 +610,13 @@ for i = 1:ns
     view(-90,90);
     title('T1\rho - T1FFE Cartilage Thickness Differences', ...
         'FontSize',16,'FontWeight','bold');
-    colorbar(hf4,'Ticks',-2.5:.5:2.5);
-    clim([-2.5 2.5]);
+    % colorbar(hf4,'Ticks',-2.5:.5:2.5);
+    colorbar;
+    clim([-1.5 1.5]);
     xlim([-30 30]);
     ylim([-40 40]);
-    scatter(xgl,ygl,4,".",'CData', grayColor);
-    scatter(xgm,ygm,4,".",'CData', grayColor);
+    % scatter(xgl,ygl,4,".",'CData', grayColor);
+    % scatter(xgm,ygm,4,".",'CData', grayColor);
     axlim=axis;
     plot([reg_lat1_all reg_lat1_all],[axlim(4) 0],"k");
     plot([reg_lat2_all reg_lat2_all],[axlim(4) 0],"k");
@@ -624,12 +628,12 @@ for i = 1:ns
     rfmed1 = mean(dthkmrf(imed(:,1)),"omitnan");
     rfmed2 = mean(dthkmrf(imed(:,2)),"omitnan");
     rfmed3 = mean(dthkmrf(imed(:,3)),"omitnan");
-    text(-15,20,num2str(rflat1));
-    text(-4,20,num2str(rflat2));
-    text(7,20,num2str(rflat3));
-    text(-13,-20,num2str(rfmed1));
-    text(0,-20,num2str(rfmed2));
-    text(13,-20,num2str(rfmed3));
+    % text(-15,20,num2str(rflat1));
+    % text(-4,20,num2str(rflat2));
+    % text(7,20,num2str(rflat3));
+    % text(-13,-20,num2str(rfmed1));
+    % text(0,-20,num2str(rfmed2));
+    % text(13,-20,num2str(rfmed3));
 
 
     hf5=nexttile(10,[1 3]);
@@ -646,14 +650,17 @@ for i = 1:ns
     view(-90,90);
     title('T2S - T1FFE Cartilage Thickness Differences', ...
         'FontSize',16,'FontWeight','bold');
-    colorbar(hf5,'Ticks',-2.5:.5:2.5);
-    clim([-2.5 2.5]);
+    % colorbar(hf5,'Ticks',-2.5:.5:2.5);
+    
+    clim([-1.5 1.5]);
     xlim([-30 30]);
     ylim([-40 40]);
-    colormap(hf4, 'parula(10)');
-    colormap(hf5, 'parula(10)');
-    scatter(xgl,ygl,4,".",'CData', grayColor);
-    scatter(xgm,ygm,4,".",'CData', grayColor);
+    % colormap(hf4, 'parula(10)');
+    % colormap(hf5, 'parula(10)');
+    colormap(hf4, 'parula');
+    colormap(hf5, 'parula');
+    % scatter(xgl,ygl,4,".",'CData', grayColor);
+    % scatter(xgm,ygm,4,".",'CData', grayColor);
     axlim=axis;
     plot([reg_lat1_all reg_lat1_all],[axlim(4) 0],"k");
     plot([reg_lat2_all reg_lat2_all],[axlim(4) 0],"k");
@@ -665,12 +672,12 @@ for i = 1:ns
     tfmed1 = mean(dthkmtf(imed(:,1)),"omitnan");
     tfmed2 = mean(dthkmtf(imed(:,2)),"omitnan");
     tfmed3 = mean(dthkmtf(imed(:,3)),"omitnan");
-    text(-15,20,num2str(tflat1));
-    text(-4,20,num2str(tflat2));
-    text(7,20,num2str(tflat3));
-    text(-13,-20,num2str(tfmed1));
-    text(0,-20,num2str(tfmed2));
-    text(13,-20,num2str(tfmed3));
+    % text(-15,20,num2str(tflat1));
+    % text(-4,20,num2str(tflat2));
+    % text(7,20,num2str(tflat3));
+    % text(-13,-20,num2str(tfmed1));
+    % text(0,-20,num2str(tfmed2));
+    % text(13,-20,num2str(tfmed3));
 
     pic_nam=fullfile(rdir, 'Tibial Thickness Differences.pdf');
 
@@ -955,24 +962,25 @@ view(-90,90);
 axis equal;
 title('Rho - T1FFE Averages', ...
     'FontSize',14,'FontWeight','bold');
-colormap(hf1,parula(10));
-hf1.CLim = [-2.5 2.5];
-colorbar(hf1, 'Ticks', -2.5:.5:2.5);
+colormap(hf1,parula);
+hf1.CLim = [-1.5 1.5];
+colorbar;
+% colorbar(hf1, 'Ticks', -2.5:.5:2.5);
 xlim(hf1,[-30 30]);
 ylim(hf1,[-40 40]);
-scatter(xgl,ygl,4,".",'CData', grayColor);
-scatter(xgm,ygm,4,".",'CData', grayColor);
+% scatter(xgl,ygl,4,".",'CData', grayColor);
+% scatter(xgm,ygm,4,".",'CData', grayColor);
 axlim=axis;
 plot([reg_lat1_all reg_lat1_all],[axlim(4) 0],"k");
 plot([reg_lat2_all reg_lat2_all],[axlim(4) 0],"k");
 plot([reg_med1_all reg_med1_all],[0 axlim(3)],"k");
 plot([reg_med2_all reg_med2_all],[0 axlim(3)],"k");
-text(-15,20,num2str(rflat1));
-text(-4,20,num2str(rflat2));
-text(7,20,num2str(rflat3));
-text(-13,-20,num2str(rfmed1));
-text(0,-20,num2str(rfmed2));
-text(13,-20,num2str(rfmed3));
+% text(-15,20,num2str(rflat1));
+% text(-4,20,num2str(rflat2));
+% text(7,20,num2str(rflat3));
+% text(-13,-20,num2str(rfmed1));
+% text(0,-20,num2str(rfmed2));
+% text(13,-20,num2str(rfmed3));
 
 hf2 = nexttile;
 patch(xgl(quadl'),ygl(quadl'),avg_tflat(quadl'),'FaceColor','interp', ...
@@ -984,24 +992,25 @@ view(-90,90);
 axis equal;
 title('T2S - T1FFE Averages', ...
     'FontSize',14,'FontWeight','bold');
-colormap(hf2,parula(10));
-hf2.CLim = [-2.5 2.5];
-colorbar(hf2, 'Ticks', -2.5:.5:2.5);
+colormap(hf2,parula);
+hf2.CLim = [-1.5 1.5];
+colorbar;
+% colorbar(hf2, 'Ticks', -2.5:.5:2.5);
 xlim(hf2,[-30 30]);
 ylim(hf2,[-40 40]);
-scatter(xgl,ygl,4,".",'CData', grayColor);
-scatter(xgm,ygm,4,".",'CData', grayColor);
+% scatter(xgl,ygl,4,".",'CData', grayColor);
+% scatter(xgm,ygm,4,".",'CData', grayColor);
 axlim=axis;
 plot([reg_lat1_all reg_lat1_all],[axlim(4) 0],"k");
 plot([reg_lat2_all reg_lat2_all],[axlim(4) 0],"k");
 plot([reg_med1_all reg_med1_all],[0 axlim(3)],"k");
 plot([reg_med2_all reg_med2_all],[0 axlim(3)],"k");
-text(-15,20,num2str(tflat1));
-text(-4,20,num2str(tflat2));
-text(7,20,num2str(tflat3));
-text(-13,-20,num2str(tfmed1));
-text(0,-20,num2str(tfmed2));
-text(13,-20,num2str(tfmed3));
+% text(-15,20,num2str(tflat1));
+% text(-4,20,num2str(tflat2));
+% text(7,20,num2str(tflat3));
+% text(-13,-20,num2str(tfmed1));
+% text(0,-20,num2str(tfmed2));
+% text(13,-20,num2str(tfmed3));
 
 hf3 = nexttile;
 patch(xgl(quadl'),ygl(quadl'),std_rflat(quadl'),'FaceColor','interp', ...
@@ -1014,12 +1023,12 @@ axis equal;
 title('Rho - T1FFE','Standard Deviatons', ...
     'FontSize',14,'FontWeight','bold');
 hf3.CLim = [0 1.5];
-colormap(hf3,jet(6));
+colormap(hf3,jet);
 colorbar(hf3,'Ticks', 0:.25:1.5);
 xlim(hf3,[-30 30]);
 ylim(hf3,[-40 40]);
-scatter(xgl,ygl,4,".",'CData', grayColor);
-scatter(xgm,ygm,4,".",'CData', grayColor);
+% scatter(xgl,ygl,4,".",'CData', grayColor);
+% scatter(xgm,ygm,4,".",'CData', grayColor);
 axlim=axis;
 plot([reg_lat1_all reg_lat1_all],[axlim(4) 0],"k");
 plot([reg_lat2_all reg_lat2_all],[axlim(4) 0],"k");
@@ -1037,12 +1046,12 @@ axis equal;
 title('T2S - T1FFE','Standard Deviatons', ...
     'FontSize',14,'FontWeight','bold');
 hf4.CLim = [0 1.5];
-colormap(hf4,jet(6));
+colormap(hf4,jet);
 colorbar(hf4,'Ticks', 0:.25:1.5);
 xlim(hf4,[-30 30]);
 ylim(hf4,[-40 40]);
-scatter(xgl,ygl,4,".",'CData', grayColor);
-scatter(xgm,ygm,4,".",'CData', grayColor);
+% scatter(xgl,ygl,4,".",'CData', grayColor);
+% scatter(xgm,ygm,4,".",'CData', grayColor);
 axlim=axis;
 plot([reg_lat1_all reg_lat1_all],[axlim(4) 0],"k");
 plot([reg_lat2_all reg_lat2_all],[axlim(4) 0],"k");
@@ -1066,8 +1075,8 @@ colormap(hf5,cmap);
 colorbar(hf5,'Ticks', 2.5:9.5, 'TickLabels', ["3" "4" "5" "6" "7" "8" "9" "10"], 'TickLength', 0);
 xlim(hf5,[-30 30]);
 ylim(hf5,[-40 40]);
-scatter(xgl,ygl,4,".",'CData', grayColor);
-scatter(xgm,ygm,4,".",'CData', grayColor);
+% scatter(xgl,ygl,4,".",'CData', grayColor);
+% scatter(xgm,ygm,4,".",'CData', grayColor);
 
 hf6 = nexttile;
 patch(xgl(quadl'),ygl(quadl'),n_tflat(quadl'),'FaceColor','interp', ...
@@ -1086,8 +1095,8 @@ colormap(hf6,cmap);
 colorbar(hf6,'Ticks', 2.5:9.5, 'TickLabels', ["3" "4" "5" "6" "7" "8" "9" "10"], 'TickLength', 0);
 xlim(hf6,[-30 30]);
 ylim(hf6,[-40 40]);
-scatter(xgl,ygl,4,".",'CData', grayColor);
-scatter(xgm,ygm,4,".",'CData', grayColor);
+% scatter(xgl,ygl,4,".",'CData', grayColor);
+% scatter(xgm,ygm,4,".",'CData', grayColor);
 
 set(f, 'units','normalized','outerposition',[0 0 1 1]);
 exportgraphics(f, pic_nam, "Resolution", 300, 'Append', true);
