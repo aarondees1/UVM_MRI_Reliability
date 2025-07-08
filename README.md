@@ -137,7 +137,7 @@ The flowchart visually represents the entire data processing pipeline, highlight
 
 ## Common Dependencies
 
-Several custom MATLAB M-files are required in the current directory or MATLAB path for these scripts to run correctly. These include (but are not limited to):
+Several custom MATLAB M-files are required in the current directory or MATLAB path for these scripts to run correctly. Additionally, the MATLAB Optimization Toolbox is required for several scripts to execute properly. These include (but are not limited to):
 
 ```
 fix_pts_AD.m
