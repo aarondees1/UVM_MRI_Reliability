@@ -13,14 +13,14 @@ The workflow is sequential, with each script building upon the outputs of the pr
 The scripts in this repository must be executed in the following order to ensure proper data flow and dependencies are met:
 
 ```
-tibias08b_AD.m
-tibias08c_AD.m
-tcart08_sag_AD.m
-tcthk_cmp_AD.m
-femurs08b_AD.m
-femurs08c_AD.m
-fcart08_sag_AD.m
-fcthk_cmp_AD.m
+1. tibias08b_AD.m
+2. tibias08c_AD.m
+3. tcart08_sag_AD.m
+4. tcthk_cmp_AD.m
+5. femurs08b_AD.m
+6. femurs08c_AD.m
+7. fcart08_sag_AD.m
+8. fcthk_cmp_AD.m
 ```
 
 ### Workflow Flowchart
