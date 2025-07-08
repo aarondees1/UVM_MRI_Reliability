@@ -1,48 +1,47 @@
-UVM_MRI_Reliability
-UVM MRI Reliability Study: Cartilage Thickness Processing and Comparison
+# UVM_MRI_Reliability
+
+## UVM MRI Reliability Study: Cartilage Thickness Processing and Comparison
+
 This repository contains a suite of MATLAB scripts designed to process, analyze, and compare subchondral bone and cartilage data from MRI scans, specifically focusing on the tibia and femur. The scripts establish anatomical coordinate systems, transform digitized points, calculate cartilage thicknesses, and perform comparisons across different MRI scan types (T1FFE, T1rho, and T2S).
 
 The workflow is sequential, with each script building upon the outputs of the preceding ones.
 
-Workflow and Order of M-Files
+---
+
+## Workflow and Order of M-Files
+
 The scripts in this repository must be executed in the following order to ensure proper data flow and dependencies are met:
 
-tibias08b_AD.m
+1. `tibias08b_AD.m`  
+2. `tibias08c_AD.m`  
+3. `tcart08_sag_AD.m`  
+4. `tcthk_cmp_AD.m`  
+5. `femurs08b_AD.m`  
+6. `femurs08c_AD.m`  
+7. `fcart08_sag_AD.m`  
+8. `fcthk_cmp_AD.m`  
 
-tibias08c_AD.m
+### Workflow Flowchart
 
-tcart08_sag_AD.m
-
-tcthk_cmp_AD.m
-
-femurs08b_AD.m
-
-femurs08c_AD.m
-
-fcart08_sag_AD.m
-
-fcthk_cmp_AD.m
-
-Here is a flowchart illustrating the complete workflow for the UVM MRI Reliability Study, from initial MRI scans and digitization to the final comparison of cartilage thicknesses using your MATLAB scripts, updated with the new .mat file names for the sd structure.
-
+```mermaid
 graph TD
-    A[MRI Scans] --> B{OsiriX Digitization};
-    B -- Export Digitizations --> C[Raw Data CSVs];
+    A[MRI Scans] --> B{OsiriX Digitization}
+    B --> C[Raw Data CSVs]
 
-    C -- Input Data (from Data directory) --> D(1. tibias08b_AD.m);
-    D -- Processed Tibia Bone Data (***_tibiaCS.mat) & Updated sd (All Subjects Tibia Bone Data.mat) --> E(2. tibias08c_AD.m);
-    E -- Processed Tibia Cartilage Data (***_tibiaCart.mat) & Updated sd (All Subjects Tibia Bone And Cartilage Data.mat) --> F(3. tcart08_sag_AD.m);
-    F -- Tibia Thickness Data (***_tcart08_thk.mat) & Grid Data (scanType_tgrid08_.mat) & Updated sd (All Subjects Tibia Cartilage Thickness Data.mat) --> G(4. tcthk_cmp_AD.m);
-    G -- Tibia Thickness Comparison Plots (PDF) & Regional Excel Data --> H[Tibia Analysis Results];
+    C --> D(1. tibias08b_AD.m)
+    D --> E(2. tibias08c_AD.m)
+    E --> F(3. tcart08_sag_AD.m)
+    F --> G(4. tcthk_cmp_AD.m)
+    G --> H[Tibia Analysis Results]
 
-    F -- Also provides sd (All Subjects Tibia Cartilage Thickness Data.mat) --> I(5. femurs08b_AD.m);
-    I -- Processed Femur Bone Data (***_femurCS.mat) & Updated sd (All Subjects Full Tibia and Femur Bone Data.mat) --> J(6. femurs08c_AD.m);
-    J -- Processed Femur Cartilage Data (***_femurCart.mat) & Updated sd (All Subjects Full Tibia and Femur Bone and Cartilage Data.mat) --> K(7. fcart08_sag_AD.m);
-    K -- Femur Thickness Data (***_fcart08_thk.mat) & Grid Data (scanType_fgrid08_.mat) & Updated sd (All Subjects Tibia and Femur Cartilage Thickness Data.mat) --> L(8. fcthk_cmp_AD.m);
-    L -- Femur Thickness Comparison Plots (PDF) & Regional Excel Data --> M[Femur Analysis Results];
+    F --> I(5. femurs08b_AD.m)
+    I --> J(6. femurs08c_AD.m)
+    J --> K(7. fcart08_sag_AD.m)
+    K --> L(8. fcthk_cmp_AD.m)
+    L --> M[Femur Analysis Results]
 
-    H --> N[Final Research Outcomes];
-    M --> N;
+    H --> N[Final Research Outcomes]
+    M --> N
 
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style B fill:#f9f,stroke:#333,stroke-width:2px
@@ -50,180 +49,100 @@ graph TD
     style H fill:#bbf,stroke:#333,stroke-width:2px
     style M fill:#bbf,stroke:#333,stroke-width:2px
     style N fill:#afa,stroke:#333,stroke-width:2px
+```
 
-The flowchart visually represents the entire data processing pipeline, highlighting the sequential nature of the MATLAB scripts and their key inputs and outputs.
+---
 
-Script Descriptions
-Each script performs a specific set of tasks, contributing to the overall data processing pipeline:
+## Script Descriptions
 
-1. tibias08b_AD.m
-Purpose: Processes digitized tibia bone data to establish the tibial coordinate system.
+### 1. `tibias08b_AD.m`
+- **Purpose**: Processes digitized tibia bone data to establish the tibial coordinate system.
+- **Outputs**: PDF plots, `***_tibiaCS.mat`, updates `sd` in `All Subjects Tibia Bone Data.mat`.
 
-Functionality: Reads raw bone digitization points and transforms the data into the tibia's anatomical coordinate system. It plots the coordinate system and the transformed bone data.
+### 2. `tibias08c_AD.m`
+- **Purpose**: Transforms tibia cartilage data using the tibial coordinate system.
+- **Dependencies**: `***_tibiaCS.mat` from `tibias08b_AD.m`.
+- **Outputs**: PDF plots, `***_tibiaCart.mat`, updates `sd` in `All Subjects Tibia Bone And Cartilage Data.mat`.
 
-Outputs:
+### 3. `tcart08_sag_AD.m`
+- **Purpose**: Calculates tibial cartilage thicknesses using a grid.
+- **Dependencies**: `***_tibiaCS.mat` and `***_tibiaCart.mat`.
+- **Outputs**: PDF plots, `***_tcart08_thk.mat`, `scanType_tgrid08_.mat`, updates `sd`.
 
-PDF Plots: Plots of the tibia coordinate system and subchondral bone, following the format ***_tibias08b.pdf for a given subject, knee (left or right), and scan type (e.g., 001_L_FFE_tibias08b.pdf).
+### 4. `tcthk_cmp_AD.m`
+- **Purpose**: Compares tibial thickness across scan types.
+- **Dependencies**: Thickness and grid data.
+- **Outputs**: Tibial comparison plots, Excel files.
 
-MAT File: ***_tibiaCS.mat containing the tibial coordinate system (transformation matrix and origin) and transformed bone data.
+### 5. `femurs08b_AD.m`
+- **Purpose**: Processes femur bone data and coordinate system.
+- **Dependencies**: Uses `sd` from `tcart08_sag_AD.m`.
+- **Outputs**: PDF plots, `***_femurCS.mat`, updates `sd`.
 
-sd Structure: Updates the sd structure (saved in All Subjects Tibia Bone Data.mat) with paths to processed bone files.
+### 6. `femurs08c_AD.m`
+- **Purpose**: Transforms femur cartilage data.
+- **Dependencies**: `***_femurCS.mat`.
+- **Outputs**: PDF plots, `***_femurCart.mat`, updates `sd`.
 
-2. tibias08c_AD.m
-Purpose: Processes digitized tibia cartilage data and transforms it into the previously established tibial bony coordinate system.
+### 7. `fcart08_sag_AD.m`
+- **Purpose**: Calculates femoral cartilage thickness.
+- **Dependencies**: `***_femurCS.mat`, `***_femurCart.mat`.
+- **Outputs**: PDF plots, `***_fcart08_thk.mat`, `scanType_fgrid08_.mat`, updates `sd`.
 
-Dependencies: Relies on the ***_tibiaCS.mat files generated by tibias08b_AD.m.
+### 8. `fcthk_cmp_AD.m`
+- **Purpose**: Compares femoral thickness across scan types.
+- **Dependencies**: Thickness and grid data.
+- **Outputs**: Femoral comparison plots, Excel files.
 
-Functionality: Reads raw cartilage digitization points, transforms them into the tibial coordinate system, and plots both raw and transformed cartilage data.
+---
 
-Outputs:
+## Common Dependencies
 
-PDF Plots: Plots of the femoral cartilage, following the format ***_tibias08c.pdf for a given subject, knee (left or right), and scan type (e.g., 001_L_FFE_tibias08c.pdf).
+These custom MATLAB M-files are required:
 
-MAT File: ***_tibiaCart.mat containing the transformed cartilage data and mesh.
+- `fix_pts_AD.m`
+- `tibia_cs8.m`
+- `f_cs_14.m`
+- `rd_roi6.m`
+- `mk_tri6.m`
+- `mk_tri4f.m`
+- `tri_fix2.m`
+- `car_thk8.m`
+- `gridproj.m`
+- `comb_dat.m`
+- `nod2tri.m`
+- `quadconn.m`
+- `freg_axpf2_AD.m`
 
-sd Structure: Updates the sd structure (saved in All Subjects Tibia Bone And Cartilage Data.mat) with paths to processed cartilage files.
+---
 
-3. tcart08_sag_AD.m
-Purpose: Calculates tibial cartilage thicknesses using a standardized grid.
+## Data Structure (`sd`)
 
-Dependencies: Requires ***_tibiaCS.mat (from tibias08b_AD.m) and ***_tibiaCart.mat (from tibias08c_AD.m).
+The `sd` structure stores data paths and is updated across scripts:
 
-Functionality: Defines a 1mm by 1mm grid, scales and projects it onto the bone surface, and calculates cartilage thicknesses by intersecting bone normals with the cartilage surface.
-Outputs:
+- `All Subjects Tibia Bone Data.mat`
+- `All Subjects Tibia Bone And Cartilage Data.mat`
+- `All Subjects Tibia Cartilage Thickness Data.mat`
+- `All Subjects Full Tibia and Femur Bone Data.mat`
+- `All Subjects Full Tibia and Femur Bone and Cartilage Data.mat`
+- `All Subjects Tibia and Femur Cartilage Thickness Data.mat`
 
-PDF Plots: Plots of tibial bony/cartilage surfaces and thickness maps, following the format ***_tcart08_sagittal_thk.pdf for a given subject, knee, and scan type (e.g., 001_L_FFE_tcart08_sagittal_thk.pdf).
+---
 
-MAT Files:
+## Usage
 
-Grid scaling data: scanType_tgrid08_.mat (e.g., FFE_tgrid08_.mat).
+1. Organize raw CSV digitization files in the `Data` directory.
+2. Ensure all helper M-files are in the MATLAB path.
+3. Run scripts in order (see above).
+4. Each script prompts for the base data directory.
 
-Calculated thicknesses: ***_tcart08_thk.mat for a given subject, knee, and scan type (e.g., 001_L_FFE_tcart08_thk.mat). 
+---
 
-sd Structure: Updates the sd structure (saved in All Subjects Tibia Cartilage Thickness Data.mat) with grid and thickness file paths.
+## Authors
 
-4. tcthk_cmp_AD.m
-Purpose: Compares tibial cartilage thicknesses across different MRI scan types.
+- Mack Gardner-Morse  
+- Aaron Dees
 
-Dependencies: Relies on the thickness (***_tcart08_thk.mat) and grid (scanType_tgrid08_.mat) files generated by tcart08_sag_AD.m.
+---
 
-Functionality: Reads T1FFE, T1rho, and T2S cartilage thicknesses, establishes a combined grid, and calculates thickness differences (T1rho - T1FFE, T2S - T1FFE). It generates plots of individual thicknesses, difference maps, and statistical distributions.
-
-Outputs:
-
-PDF Plots: Plots of tibial cartilage thicknesses and their differences, following the format Tibial Thickness Differences.pdf.
-
-Excel Files: Regional thickness data for each scan type, following the format tib_lat_pos.xlsx, tib_med_pos.xlsx, etc.
-
-5. femurs08b_AD.m
-Purpose: Processes digitized femur bone data to establish the femoral coordinate system.
-
-Dependencies: Utilizes the sd structure from All Subjects Tibia Cartilage Thickness Data.mat (output of tcart08_sag_AD.m).
-
-Functionality: Reads raw femur digitization points (lateral/medial condyles, trochlea), computes the femoral coordinate system, and transforms the bone data. It plots the coordinate system and transformed bone data.
-
-Outputs:
-
-PDF Plots: Plots of the femoral coordinate system, raw/transformed bone data, and bone surface, following the format ***_femur08b.pdf for a given subject, knee, and scan type (e.g., 001_L_FFE_femur08b.pdf).
-
-MAT File: ***_femurCS.mat containing the femoral coordinate system and transformed bone data.
-
-sd Structure: Updates the sd structure (saved in All Subjects Full Tibia and Femur Bone Data.mat) with paths to processed femoral bone files.
-
-6. femurs08c_AD.m
-Purpose: Processes digitized femur cartilage data and transforms it into the previously established femoral bony coordinate system.
-
-Dependencies: Relies on the ***_femurCS.mat files generated by femurs08b_AD.m.
-
-Functionality: Reads raw cartilage digitization points (lateral/medial condyles, trochlea), transforms them into the femoral coordinate system, and plots both raw and transformed cartilage data.
-
-Outputs:
-
-PDF Plots: Plots of the femoral cartilage, following the format ***_femurs08c.pdf for a given subject, knee, and scan type (e.g., 001_L_FFE_femurs08c.pdf).
-
-MAT File: ***_femurCart.mat containing the transformed cartilage data and mesh.
-
-sd Structure: Updates the sd structure (saved in All Subjects Full Tibia and Femur Bone and Cartilage Data.mat) with paths to processed cartilage files.
-
-7. fcart08_sag_AD.m
-Purpose: Calculates femoral cartilage thicknesses using a standardized grid.
-
-Dependencies: Requires ***_femurCS.mat (from femurs08b_AD.m) and ***_femurCart.mat (from femurs08c_AD.m).
-
-Functionality: Defines a 1mm by 2-degree grid, scales and projects it onto the bone surface, and calculates cartilage thicknesses.
-
-Outputs:
-
-PDF Plots: Plots of femoral bony/cartilage surfaces and thickness maps, following the format ***_fcart08_sagittal_thk.pdf for a given subject, knee, and scan type (e.g., 001_L_FFE_fcart08_sagittal_thk.pdf).
-
-MAT Files:
-
-Grid scaling data: scanType_fgrid08_.mat (e.g., FFE_fgrid08_.mat).
-
-Calculated thicknesses: ***_fcart08_thk.mat for a given subject, knee, and scan type (e.g., 001_L_FFE_fcart08_thk.mat).
-
-sd Structure: Updates the sd structure (saved in All Subjects Tibia and Femur Cartilage Thickness Data.mat) with grid and thickness file paths.
-
-8. fcthk_cmp_AD.m
-Purpose: Compares femoral cartilage thicknesses across different MRI scan types.
-
-Dependencies: Relies on the thickness (***_fcart08_thk.mat) and grid (scanType_fgrid08_.mat) files generated by fcart08_sag_AD.m.
-
-Functionality: Reads T1FFE, T1rho, and T2S cartilage thicknesses, establishes a combined grid, and calculates thickness differences. It generates plots of individual thicknesses, difference maps, and statistical distributions.
-
-Outputs:
-
-PDF Plots: Plots of femoral cartilage thicknesses and their differences, following the format Femoral Thickness Differences.pdf.
-
-Excel Files: Regional thickness data for each scan type, following the format fem_lat_pos.xlsx, fem_med_pos.xlsx, etc.
-
-Common Dependencies
-Several custom MATLAB M-files are required in the current directory or MATLAB path for these scripts to run correctly. These include (but are not limited to):
-
-fix_pts_AD.m
-
-tibia_cs8.m
-
-f_cs_14.m
-
-rd_roi6.m
-
-mk_tri6.m
-
-mk_tri4f.m
-
-tri_fix2.m
-
-car_thk8.m
-
-gridproj.m
-
-comb_dat.m
-
-nod2tri.m
-
-quadconn.m
-
-freg_axpf2_AD.m
-
-Data Structure (sd)
-The sd (subject data) structure is a critical component of this workflow. It is initialized in the first script and progressively updated by subsequent scripts to store paths to raw data, processed bone and cartilage files, and grid information for each subject and scan type. This structure is saved as a .mat file after each major processing stage (e.g., All Subjects Tibia Bone Data.mat, All Subjects Tibia Bone And Cartilage Data.mat, All Subjects Tibia Cartilage Thickness Data.mat, All Subjects Full Tibia and Femur Bone Data.mat, All Subjects Full Tibia and Femur Bone and Cartilage Data.mat, All Subjects Tibia and Femur Cartilage Thickness Data.mat) and loaded by the next script in the sequence, ensuring continuity of data.
-
-Usage
-To use these scripts:
-
-Organize your raw data: Ensure all necessary raw data files (e.g., CSV digitizations) are placed within a directory named Data in the root of this repository.
-
-Ensure all necessary custom M-files are in your MATLAB path.
-
-Run the scripts sequentially as listed in the "Workflow and Order of M-Files" section.
-
-Each script will prompt you to select the base data directory (which should be the root of this repository, containing the Data folder).
-
-Authors
-Mack Gardner-Morse
-
-Aaron Dees
-
-Last Edited
-July 7, 2025
+**Last Edited**: July 7, 2025
