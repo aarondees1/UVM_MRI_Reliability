@@ -1,4 +1,4 @@
-function [lmp,lmv,ppc,ppn,ppl,pnl,ppm,pnm] = fem_plan_AD(f3,tmin,iplt,ltxt,fsav)
+function [lmp,lmv,ppc,ppn,ppl,pnl,ppm,pnm] = fem_plan_AD(f3,tmin,iplt,ltxt,fsav) % Define function to calculate femur dividing planes
 %FEM_PLAN  Uses femur bone sagittal plane segmentations to calculate
 %          planes dividing the femur into regions of interest (ROIs).
 %
@@ -30,150 +30,142 @@ function [lmp,lmv,ppc,ppn,ppl,pnl,ppm,pnm] = fem_plan_AD(f3,tmin,iplt,ltxt,fsav)
 %
 %          16-Dec-2022 * Mack Gardner-Morse
 %
-
 %#######################################################################
 %
 % Check for Inputs
 %
-if (nargin<2)
+if (nargin<2) % Check if fewer than 2 inputs are provided
   error([' *** ERROR in FEM_PLAN:  An input structure with', ...
-         ' sagittal femoral segmentations is required!']);
+         ' sagittal femoral segmentations is required!']); % Throw error for insufficient inputs
 end
 %
-if (nargin<3)||isempty(iplt)
-  iplt = false;
-elseif iplt == true;
-  iplt = true;
+if (nargin<3)||isempty(iplt) % Check if plot flag is missing or empty
+  iplt = false; % Set default plot flag to false
+elseif iplt == true % Check if plot flag is explicitly true
+  iplt = true; % Ensure plot flag is true
 end
 %
-if (nargin<4)||isempty(ltxt)
-  ltxt = [];
+if (nargin<4)||isempty(ltxt) % Check if leg text is missing or empty
+  ltxt = []; % Set default leg text to empty
 end
 %
-if (nargin<5)||isempty(fsav)
-  iprt = false;
+if (nargin<5)||isempty(fsav) % Check if save file name is missing or empty
+  iprt = false; % Set default print flag to false
 else
-  iprt = true;
+  iprt = true; % Set print flag to true
 end
 %
 % Posterior and Medial/Lateral Cutoffs
 %
 % tmin = -145/rad2deg;    % Angle (theta) cutoff (-150, -145, or -140)
-tmin = deg2rad(tmin);
-y0 = 0;                 % Y cutoff (-1, 0, or 1)
-hpi = pi/2;
+tmin = deg2rad(tmin); % Convert angle cutoff to radians
+y0 = 0; % Set Y cutoff
+hpi = pi/2; % Set half pi constant
 %
 % Lateral-Medial Plane Normal Vector
 %
-lmp = [0 0 0];          % Lateral-medial point in the plane
-lmv = [0 1 0];          % Lateral-medial plane normal vector
+lmp = [0 0 0]; % Define lateral-medial plane point
+lmv = [0 1 0]; % Define lateral-medial plane normal vector
 %
-if iplt
-  hf2 = figure;
-  hold on;
-  plt_datsl(f3,'b.-',0.5,[0 0 0.7]);
-  axis equal;
-  view(3);
-  grid on;
-  xlabel('X (mm)','FontSize',12,'FontWeight','bold');
-  ylabel('Y (mm)','FontSize',12,'FontWeight','bold');
-  zlabel('Z (mm)','FontSize',12,'FontWeight','bold');
-  title({'Dividing Planes in Femur CS'; ltxt},'FontSize',16, ...
-        'FontWeight','bold');
-  view(40,20);
-  axis equal;
+if iplt % Check if plotting is enabled
+  hf2 = figure; % Create new figure
+  hold on; % Enable hold for multiple plots
+  plt_datsl(f3,'b.-',0.5,[0 0 0.7]); % Plot femoral segmentation data
+  axis equal; % Set equal axis scaling
+  view(3); % Set 3D view
+  grid on; % Enable grid
+  xlabel('X (mm)','FontSize',12,'FontWeight','bold'); % Label X-axis
+  ylabel('Y (mm)','FontSize',12,'FontWeight','bold'); % Label Y-axis
+  zlabel('Z (mm)','FontSize',12,'FontWeight','bold'); % Label Z-axis
+  title({'Dividing Planes in Femur CS'; ltxt},'FontSize',16,'FontWeight','bold'); % Set plot title
+  view(40,20); % Set view angle
+  axis equal; % Re-set equal axis scaling
   %
-  axlim = axis;
-  pxyz = [axlim(1) 0 axlim(5); axlim(2) 0 axlim(5); ...
-          axlim(2) 0 axlim(6); axlim(1) 0 axlim(6); axlim(1) 0 axlim(5)];
-  patch(pxyz(:,1),pxyz(:,2),pxyz(:,3),pxyz(:,3),'FaceColor', ...
-        [0.7 0.7 0.7],'EdgeColor','r','FaceAlpha',0.33);
+  axlim = axis; % Get axis limits
+  pxyz = [axlim(1) 0 axlim(5); axlim(2) 0 axlim(5); axlim(2) 0 axlim(6); axlim(1) 0 axlim(6); axlim(1) 0 axlim(5)]; % Define lateral-medial plane vertices
+  patch(pxyz(:,1),pxyz(:,2),pxyz(:,3),pxyz(:,3),'FaceColor',[0.7 0.7 0.7],'EdgeColor','r','FaceAlpha',0.33); % Plot lateral-medial plane
 end
 %
 % Convert XZ to Polar Coordinates
 %
-xyzlbf = cell2mat(f3);
+xyzlbf = cell2mat(f3); % Convert femoral data to matrix
 %
-[thlf,rlf,zlf] = cart2pol(xyzlbf(:,1),xyzlbf(:,3),xyzlbf(:,2));
-idc = thlf>hpi;
-thlf(idc) = thlf(idc)-2*pi;
+[thlf,rlf,zlf] = cart2pol(xyzlbf(:,1),xyzlbf(:,3),xyzlbf(:,2)); % Convert to polar coordinates
+idc = thlf>hpi; % Identify angles greater than pi/2
+thlf(idc) = thlf(idc)-2*pi; % Adjust angles to range [-3pi/2, pi/2]
 %
-if iplt
-  figure;
-  plot3(thlf,zlf,rlf,'.');
-  axlim = axis;
-  view(2);
-  hold on;
-  plot([tmin tmin],axlim(3:4),'r-','LineWidth',1);
-  xlabel('Theta (radians)','FontSize',12,'FontWeight','bold');
-  ylabel('Z (mm)','FontSize',12,'FontWeight','bold');
-  title({'Theta-Z CS'; ltxt},'FontSize',16,'FontWeight','bold');
+if iplt % Check if plotting is enabled
+  figure; % Create new figure
+  plot3(thlf,zlf,rlf,'.'); % Plot theta-Z-R data
+  axlim = axis; % Get axis limits
+  view(2); % Set 2D view
+  hold on; % Enable hold for additional plots
+  plot([tmin tmin],axlim(3:4),'r-','LineWidth',1); % Plot angle cutoff line
+  xlabel('Theta (radians)','FontSize',12,'FontWeight','bold'); % Label X-axis
+  ylabel('Z (mm)','FontSize',12,'FontWeight','bold'); % Label Y-axis
+  title({'Theta-Z CS'; ltxt},'FontSize',16,'FontWeight','bold'); % Set plot title
 else
-  tzrmn = min([thlf,rlf,zlf]);
-  tzrmx = max([thlf,rlf,zlf]);
-  axlim = [tzrmn; tzrmx];
-  axlim = axlim(:)';
+  tzrmn = min([thlf,rlf,zlf]); % Compute minimum of theta, R, Z
+  tzrmx = max([thlf,rlf,zlf]); % Compute maximum of theta, R, Z
+  axlim = [tzrmn; tzrmx]; % Combine min/max into axis limits
+  axlim = axlim(:)'; % Reshape to row vector
 end
 %
-dr = axlim(6)-axlim(5);
-rmn = mean(axlim(5:6));
-axlim(5) = rmn-0.75*dr;
-axlim(6) = rmn+1.25*dr;
+dr = axlim(6)-axlim(5); % Compute R range
+rmn = mean(axlim(5:6)); % Compute mean R
+axlim(5) = rmn-0.75*dr; % Adjust minimum R limit
+axlim(6) = rmn+1.25*dr; % Adjust maximum R limit
 %
-ppxyz = [tmin axlim(3) axlim(5); tmin axlim(4) axlim(5); ...
-         tmin axlim(4) axlim(6); tmin axlim(3) axlim(6); ...
-         tmin axlim(3) axlim(5)];
-[ppxyz(:,1),ppxyz(:,3),ppxyz(:,2)] = pol2cart(ppxyz(:,1), ...
-                                              ppxyz(:,3),ppxyz(:,2));
+ppxyz = [tmin axlim(3) axlim(5); tmin axlim(4) axlim(5); tmin axlim(4) axlim(6); tmin axlim(3) axlim(6); tmin axlim(3) axlim(5)]; % Define posterior plane vertices
+[ppxyz(:,1),ppxyz(:,3),ppxyz(:,2)] = pol2cart(ppxyz(:,1),ppxyz(:,3),ppxyz(:,2)); % Convert posterior plane to Cartesian coordinates
 %
-ppc = mean(ppxyz(1:4,:));              % Center of plane
-[nx,ny,nz] = plnorm(ppxyz(1:3,1),ppxyz(1:3,2),ppxyz(1:3,3));    % Normal
-ppn = [nx,ny,nz];
+ppc = mean(ppxyz(1:4,:)); % Compute center of posterior plane
+[nx,ny,nz] = plnorm(ppxyz(1:3,1),ppxyz(1:3,2),ppxyz(1:3,3)); % Compute posterior plane normal
+ppn = [nx,ny,nz]; % Store posterior plane normal
 %
-if (iplt)
-  figure(hf2);
-  patch(ppxyz(:,1),ppxyz(:,2),ppxyz(:,3),ppxyz(:,3),'FaceColor', ...
-        [0.7 0.7 0.7],'EdgeColor','r','FaceAlpha',0.33);
+if (iplt) % Check if plotting is enabled
+  figure(hf2); % Activate main figure
+  patch(ppxyz(:,1),ppxyz(:,2),ppxyz(:,3),ppxyz(:,3),'FaceColor',[0.7 0.7 0.7],'EdgeColor','r','FaceAlpha',0.33); % Plot posterior plane
 end
 %
 % Get Maximum "Peaks" of Femur in X-Direction
 %
-nsl = size(f3,1);       % Number of slices
+nsl = size(f3,1); % Get number of slices
 %
-mx = zeros(nsl,1);
-my = zeros(nsl,1);
+mx = zeros(nsl,1); % Initialize X maxima array
+my = zeros(nsl,1); % Initialize Y values at X maxima
 %
-for ks = 1:nsl
-   [mx(ks),idx] = max(f3{ks}(:,1));
-   my(ks) = f3{ks}(idx,2);
+for ks = 1:nsl % Loop through slices
+   [mx(ks),idx] = max(f3{ks}(:,1)); % Find maximum X and its index
+   my(ks) = f3{ks}(idx,2); % Get corresponding Y value
 end
 %
-[~,ids] = sort(mx);
-idp = find(my(ids)>0);
-idp = ids(idp(end-2:end));             % Lateral peak index to top three
-idn = find(my(ids)<0);
-idn = ids(idn(end-2:end));             % Medial peak index to top three
-mxp = mean(mx(idp));                   % Lateral peak X
-myp = mean(my(idp));                   % Lateral peak Y
-mxn = mean(mx(idn));                   % Medial peak X
-myn = mean(my(idn));                   % Medial peak Y
+[~,ids] = sort(mx); % Sort slices by X maxima
+idp = find(my(ids)>0); % Identify lateral slices (Y > 0)
+idp = ids(idp(end-2:end)); % Select top three lateral slices
+idn = find(my(ids)<0); % Identify medial slices (Y < 0)
+idn = ids(idn(end-2:end)); % Select top three medial slices
+mxp = mean(mx(idp)); % Compute mean lateral peak X
+myp = mean(my(idp)); % Compute mean lateral peak Y
+mxn = mean(mx(idn)); % Compute mean medial peak X
+myn = mean(my(idn)); % Compute mean medial peak Y
 %
 % Get Trochlea Groove
 %
-idxmn = [round(mean(idp)); round(mean(idn))];
-idxmn = sort(idxmn);
-idmn = find(ids>idxmn(1)&ids<idxmn(2));
-idmn = ids(idmn(1:3));
-mxm = mean(mx(idmn));
-mym = mean(my(idmn));
+idxmn = [round(mean(idp)); round(mean(idn))]; % Compute mean indices for lateral/medial peaks
+idxmn = sort(idxmn); % Sort indices
+idmn = find(ids>idxmn(1)&ids<idxmn(2)); % Identify trochlea groove slices
+idmn = ids(idmn(1:3)); % Select first three trochlea slices
+mxm = mean(mx(idmn)); % Compute mean trochlea X
+mym = mean(my(idmn)); % Compute mean trochlea Y
 %
 % Get Line Directions
 %
-xyc = [mxm mym];        % Center of trochlea groove at maximum X
-xyl = [mxp myp];
-xym = [mxn myn];
-vm = xym-xyc;
-vl = xyl-xyc;
+xyc = [mxm mym]; % Define trochlea groove center
+xyl = [mxp myp]; % Define lateral peak
+xym = [mxn myn]; % Define medial peak
+vm = xym-xyc; % Compute medial direction vector
+vl = xyl-xyc; % Compute lateral direction vector
 %
 % Get Center of Trochlea (Center of Coordinate System)
 %
@@ -181,53 +173,47 @@ vl = xyl-xyc;
 %
 % Get Lateral and Medial Trochlear Planes
 %
-vl = [vl 0];            % Make 3D
-vl = vl./norm(vl);
-vm = [vm 0];            % Make 3D
-vm = vm./norm(vm);
-xv = [1 0 0];
+vl = [vl 0]; % Extend lateral vector to 3D
+vl = vl./norm(vl); % Normalize lateral vector
+vm = [vm 0]; % Extend medial vector to 3D
+vm = vm./norm(vm); % Normalize medial vector
+xv = [1 0 0]; % Define X-axis vector
 %
-zvl = cross(xv,vl);
-pnl = cross(vl,zvl);    % Lateral plane normal
-pnl = pnl./norm(pnl);
-ppl = [0 0 0];          % Point in plane
+zvl = cross(xv,vl); % Compute lateral intermediate vector
+pnl = cross(vl,zvl); % Compute lateral plane normal
+pnl = pnl./norm(pnl); % Normalize lateral plane normal
+ppl = [0 0 0]; % Define lateral plane point
 %
-zvm  = cross(xv,vm);
-pnm = cross(vm,zvm);    % Medial plane normal
-pnm = pnm./norm(pnm);
-ppm = [0 0 0];          % Point in plane
+zvm = cross(xv,vm); % Compute medial intermediate vector
+pnm = cross(vm,zvm); % Compute medial plane normal
+pnm = pnm./norm(pnm); % Normalize medial plane normal
+ppm = [0 0 0]; % Define medial plane point
 %
 % Plot Lateral and Medial Trochlear Planes
 %
-if iplt
+if iplt % Check if plotting is enabled
 %
-  figure(hf2);
-  orient landscape;
-  axis equal;
-  axlim = axis;
+  figure(hf2); % Activate main figure
+  orient landscape; % Set figure orientation to landscape
+  axis equal; % Set equal axis scaling
+  axlim = axis; % Get axis limits
 %
-  xlmx = -pnl(2)*axlim(4)/pnl(1);
-  xmmx = -pnm(2)*axlim(3)/pnm(1);
+  xlmx = -pnl(2)*axlim(4)/pnl(1); % Compute X limit for lateral plane
+  xmmx = -pnm(2)*axlim(3)/pnm(1); % Compute X limit for medial plane
 %
-  pxyztll  = [0 0 axlim(6); 0 0 axlim(5); xlmx axlim(4) axlim(5); ...
-              xlmx axlim(4) axlim(6); 0 0 axlim(6)];
-  
+  pxyztll = [0 0 axlim(6); 0 0 axlim(5); xlmx axlim(4) axlim(5); xlmx axlim(4) axlim(6); 0 0 axlim(6)]; % Define lateral trochlear plane vertices
 %
-  pxyztlm  = [0 0 axlim(6); xmmx axlim(3) axlim(6); xmmx ...
-              axlim(3) axlim(5); 0 0 axlim(5); 0 0 axlim(6)];
-  
+  pxyztlm = [0 0 axlim(6); xmmx axlim(3) axlim(6); xmmx axlim(3) axlim(5); 0 0 axlim(5); 0 0 axlim(6)]; % Define medial trochlear plane vertices
 %
-  patch(pxyztll(:,1),pxyztll(:,2),pxyztll(:,3),pxyztll(:,3), ...
-        'FaceColor',[0.7 0.7 0.7],'EdgeColor','r','FaceAlpha',0.33);
-  patch(pxyztlm(:,1),pxyztlm(:,2),pxyztlm(:,3),pxyztlm(:,3), ...
-        'FaceColor',[0.7 0.7 0.7],'EdgeColor','r','FaceAlpha',0.33);
+  patch(pxyztll(:,1),pxyztll(:,2),pxyztll(:,3),pxyztll(:,3),'FaceColor',[0.7 0.7 0.7],'EdgeColor','r','FaceAlpha',0.33); % Plot lateral trochlear plane
+  patch(pxyztlm(:,1),pxyztlm(:,2),pxyztlm(:,3),pxyztlm(:,3),'FaceColor',[0.7 0.7 0.7],'EdgeColor','r','FaceAlpha',0.33); % Plot medial trochlear plane
 %
-  if iprt
-    print('-dpsc2','-r600','-fillpage',fsav);
-    view(-90,90);
-    print('-dpsc2','-r600','-fillpage','-append',fsav);
+  if iprt % Check if printing is enabled
+    print('-dpsc2','-r600','-fillpage',fsav); % Save first view to file
+    view(-90,90); % Change to top view
+    print('-dpsc2','-r600','-fillpage','-append',fsav); % Append top view to file
   end
 %
 end
 %
-return
+return % Exit the function

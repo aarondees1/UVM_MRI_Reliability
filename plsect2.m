@@ -1,4 +1,4 @@
-function [ip,t,idx] = plsect2(pp,pn,pwl,tol)
+function [ip,t,idx] = plsect2(pp,pn,pwl,tol) % Define function to find plane-piecewise linear line intersection
 %PLSECT2 Finds the intersection of a plane and a piecewise linear (PWL)
 %        line.
 %
@@ -28,64 +28,63 @@ function [ip,t,idx] = plsect2(pp,pn,pwl,tol)
 %
 %       02-Dec-2022 * Mack Gardner-Morse
 %
-
 %#######################################################################
 %
 % Check for Inputs
 %
-if (nargin<3)
-  error(' *** Error in PLSECT2:  Three input arguments are required!');
+if (nargin<3) % Check if fewer than 3 inputs are provided
+  error(' *** Error in PLSECT2:  Three input arguments are required!'); % Throw error for insufficient inputs
 end
 %
-if (nargin<4)||isempty(tol)
-  tol = 1e-8;
+if (nargin<4)||isempty(tol) % Check if tolerance is missing or empty
+  tol = 1e-8; % Set default tolerance
 end
 %
 % Get Column Vectors
 %
-pp = pp(:);
-pn = pn(:);
+pp = pp(:); % Convert plane point to column vector
+pn = pn(:); % Convert plane normal to column vector
 %
 % Check Inputs
 %
-[npts,nc] = size(pwl);
-if size(pp,1)~=3||size(pn,1)~=3||nc~=3
+[npts,nc] = size(pwl); % Get dimensions of piecewise linear line
+if size(pp,1)~=3||size(pn,1)~=3||nc~=3 % Check if coordinates are 3D
   error([' *** Error in PLSECT2:  Coordinate dimensions must equal', ...
-         ' three (3)!']);
+         ' three (3)!']); % Throw error for invalid dimensions
 end
-if npts<2
+if npts<2 % Check if line has at least 2 points
   error([' *** Error in PLSECT2:  Piecewise linear line must have', ...
-         ' at least two (2) points!']);
+         ' at least two (2) points!']); % Throw error for insufficient points
 end
 %
 % Initial Values
 %
-ip = [];                % Empty if no intersection
-t = [];                 % Empty if no intersection
-idx = [];               % Empty if no intersection
+ip = []; % Initialize intersection point as empty
+t = []; % Initialize normalized distance as empty
+idx = []; % Initialize segment index as empty
 %
-nl = npts-1;            % Number of lines in piecewise linear (PWL) line
+nl = npts-1; % Compute number of line segments
 %
 % Loop through Piecewise Linear Line
 %
-for k = 1:nl
+for k = 1:nl % Loop through segments
 %
-   l = k+1;             % Next point
+   l = k+1; % Get index of next point
 %
-   lp = pwl(k,:)';                     % Point on line
-   lv = pwl(l,:)'-lp;                  % Direction of line
+   lp = pwl(k,:)' ; % Get current point as column vector
+   lv = pwl(l,:)' -lp; % Compute line direction vector
 %
 % Check for Intersection
 %
-   [ipp,tp] = plsect(pp,pn,lp,lv,tol);
+   [ipp,tp] = plsect(pp,pn,lp,lv,tol); % Find intersection with segment
 %
-   if ~isempty(ipp)
-     ip = ipp;
-     t = tp;
-     idx = k;
-     break;
+   if ~isempty(ipp) % Check if intersection exists
+     ip = ipp; % Store intersection point
+     t = tp; % Store normalized distance
+     idx = k; % Store segment index
+     break; % Exit loop
    end
 %
 end
 %
-return
+return % Exit the function

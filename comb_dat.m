@@ -1,4 +1,4 @@
-function dats = comb_dat(datl,datm,datt);
+function dats = comb_dat(datl,datm,datt)
 %COMB_DAT Combines the sagittal lateral and medial condyle and trochlea
 %         MRI knee data cell arrays into a single data cell array.
 %
@@ -22,43 +22,35 @@ function dats = comb_dat(datl,datm,datt);
 %         03-Jul-2014 * Mack Gardner-Morse
 %
 
-%#######################################################################
-%
-% Check for Inputs
-%
+% Check if three input arguments are provided.
 if (nargin<3)
   error(' *** ERROR in COMB_DAT:  No or not enough input data!');
 end
-%
-% Get Direction Between the Centers of the Condyles
-%
-xyzl = cell2mat(datl);
-xyzm = cell2mat(datm);
-%
-vx = mean(xyzl)-mean(xyzm);
-%
-% Get Directions Within the Data Cell Arrays
-%
-slvm = sl_dir(datm);
-slvt = sl_dir(datt);
-slvl = sl_dir(datl);
-%
-% Reverse Slice Order if Necessary
-%
+
+% Convert cell arrays to matrices for calculating mean centers.
+xyzl = cell2mat(datl); % Combine lateral condyle slices into matrix
+xyzm = cell2mat(datm); % Combine medial condyle slices into matrix
+
+% Compute direction vector between mean centers of lateral and medial condyles.
+vx = mean(xyzl)-mean(xyzm); % Vector from medial to lateral condyle center
+
+% Determine slice directions for each data set using sl_dir.
+slvm = sl_dir(datm); % Slice direction for medial condyle
+slvt = sl_dir(datt); % Slice direction for trochlea
+slvl = sl_dir(datl); % Slice direction for lateral condyle
+
+% Reverse slice order if direction opposes medial-to-lateral vector.
 if slvm*vx'<0
-  datm = flipud(datm);
+  datm = flipud(datm); % Flip medial condyle slices
 end
-%
 if slvt*vx'<0
-  datt = flipud(datt);
+  datt = flipud(datt); % Flip trochlea slices
 end
-%
 if slvl*vx'<0
-  datl = flipud(datl);
+  datl = flipud(datl); % Flip lateral condyle slices
 end
-%
-% Combine Slice Data (Cell Arrays)
-%
-dats = [datm; datt; datl];
-%
-return
+
+% Combine slice data cell arrays in order: medial, trochlea, lateral.
+dats = [datm; datt; datl]; % Concatenate cell arrays vertically
+
+return % Exit function

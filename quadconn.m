@@ -1,4 +1,4 @@
-function [quad,nq] = quadconn(nr,nc)
+function [quad,nq] = quadconn(nr,nc) % Define function to generate quadrilateral connectivity
 %QUADCONN Generates quadrilateral connectivity for rectangular regions.
 %
 %         QUAD = QUADCONN(NR,NC) Given the number of rows, NR, and
@@ -13,38 +13,37 @@ function [quad,nq] = quadconn(nr,nc)
 %
 %         27-March-2014 * Mack Gardner-Morse
 %
-
 %#######################################################################
 %
 % Check the Inputs
 %
-if (nargin<1)
-  error(' *** ERROR in QUADCONN:  Not enough input arguments!');
+if (nargin<1) % Check if no inputs are provided
+  error(' *** ERROR in QUADCONN:  Not enough input arguments!'); % Throw error for insufficient inputs
 end
 %
-if (nargin<2)
-  if isnumeric(nr)
-    nr = nr(:);
-    if size(nr,1)==2
-      nc = nr(2);
-      nr = nr(1);
+if (nargin<2) % Check if only one input is provided
+  if isnumeric(nr) % Check if input is numeric
+    nr = nr(:); % Convert input to column vector
+    if size(nr,1)==2 % Check if input has two elements
+      nc = nr(2); % Assign second element to nc
+      nr = nr(1); % Assign first element to nr
     else
-      error(' *** ERROR in QUADCONN:  Two numeric values are required!');
+      error(' *** ERROR in QUADCONN:  Two numeric values are required!'); % Throw error for invalid input size
     end
   else
-    error(' *** ERROR in QUADCONN:  Inputs must be numeric!');
+    error(' *** ERROR in QUADCONN:  Inputs must be numeric!'); % Throw error for non-numeric input
   end
 end
 %
 % Quadrilateral Connectivity
 %
-quad = (1:nr-1)';
-quad = [quad quad+nr quad+nr+1 quad+1];
-quad = repmat(quad,nc-1,1);
-addcol = repmat(nr*(0:nc-2),(nr-1)*4,1);
-addcol = reshape(addcol,4,(nc-1)*(nr-1))';
-quad = quad+addcol;     % Quadrilateral connectivity matrix
+quad = (1:nr-1)'; % Initialize first column of quadrilateral connectivity
+quad = [quad quad+nr quad+nr+1 quad+1]; % Define quadrilateral node indices
+quad = repmat(quad,nc-1,1); % Replicate connectivity for all columns
+addcol = repmat(nr*(0:nc-2),(nr-1)*4,1); % Create offset for connectivity
+addcol = reshape(addcol,4,(nc-1)*(nr-1))'; % Reshape offset matrix
+quad = quad+addcol; % Adjust quadrilateral connectivity with offsets
 %
-nq = size(quad,1);
+nq = size(quad,1); % Compute number of quadrilateral elements
 %
-return
+return % Exit the function

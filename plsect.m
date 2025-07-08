@@ -1,4 +1,4 @@
-function [ip,t,il,ierr] = plsect(pp,pn,lp,lv,tol)
+function [ip,t,il,ierr] = plsect(pp,pn,lp,lv,tol) % Define function to find plane-line intersection
 %PLSECT  Finds the intersection of a plane and a line.
 %
 %        [IP,T,IL,IERR] = PLSECT(PP,PN,LP,LV) finds the intersection of
@@ -22,52 +22,51 @@ function [ip,t,il,ierr] = plsect(pp,pn,lp,lv,tol)
 %
 %       02-Dec-2022 * Mack Gardner-Morse
 %
-
 %#######################################################################
 %
 % Check for Inputs
 %
-if (nargin<4)
-  error(' *** Error in PLSECT:  Four input arguments are required!');
+if (nargin<4) % Check if fewer than 4 inputs are provided
+  error(' *** Error in PLSECT:  Four input arguments are required!'); % Throw error for insufficient inputs
 end
 %
-if (nargin<5)||isempty(tol)
-  tol = 1e-8;
+if (nargin<5)||isempty(tol) % Check if tolerance is missing or empty
+  tol = 1e-8; % Set default tolerance
 end
 %
 % Get Column Vectors
 %
-pp = pp(:);
-pn = pn(:);
-lp = lp(:);
-lv = lv(:);
+pp = pp(:); % Convert plane point to column vector
+pn = pn(:); % Convert plane normal to column vector
+lp = lp(:); % Convert line point to column vector
+lv = lv(:); % Convert line direction to column vector
 %
 % Initial Values
 %
-ip = [];                % Empty if no intersection
-t = [];                 % Empty if no intersection
-il = false;
-ierr = false;
+ip = []; % Initialize intersection point as empty
+t = []; % Initialize parametric distance as empty
+il = false; % Initialize intersection flag as false
+ierr = false; % Initialize error flag as false
 %
 % Check Dot Product of the Line Direction and Plane Normal
 %
-if abs(lv'*pn)<tol
-  ierr = true;
-  return;
+if abs(lv'*pn)<tol % Check if line is nearly parallel to plane
+  ierr = true; % Set error flag
+  return; % Exit function
 end
 %
 % Calculate Intersection Point
 % Solution of substituting the parametric line equation into the plane
 % equation.
 %
-t = pn'*(pp-lp)./(pn'*lv);             % Parametric distance along line
+t = pn'*(pp-lp)./(pn'*lv); % Compute parametric distance
 %
 % Check Intersection is Within the Line Endpoints (0<=t<=1)
 %
-if (0<=t)&&(t<=1)
-  il = true;
-  ip = lp+t*lv;
-  ip = ip';             % Coordinates in columns
+if (0<=t)&&(t<=1) % Check if intersection is within segment
+  il = true; % Set intersection flag
+  ip = lp+t*lv; % Compute intersection point
+  ip = ip'; % Transpose to row vector
 end
 %
-return
+return % Exit the function
