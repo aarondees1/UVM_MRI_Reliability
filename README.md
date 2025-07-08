@@ -34,19 +34,16 @@ graph TD
     D --> E(Create Tibia Cartilage Meshes - tibias08c_AD.m)
     E --> F(Calculate Tibia Cartilage Thicknesses - tcart08_sag_AD.m)
     F --> G(Compare Tibia Cartilage Thicknesses and Export Results in Excel - tcthk_cmp_AD.m)
-    
+
     F --> I(Create Femur Bone Meshes - femurs08b_AD.m)
     I --> J(Create Femur Cartilage Meshes - femurs08c_AD.m)
     J --> K(Calculate Femur Cartilage Thicknesses - fcart08_sag_AD.m)
-    K --> L(Compare Femur Cartilage Thicknesses and Export Results in Excel- fcthk_cmp_AD.m)
-    L --> M[Femur Analysis Results]
+    K --> L(Compare Femur Cartilage Thicknesses and Export Results in Excel - fcthk_cmp_AD.m)
 
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style B fill:#f9f,stroke:#333,stroke-width:2px
     style C fill:#f9f,stroke:#333,stroke-width:2px
-    style H fill:#bbf,stroke:#333,stroke-width:2px
-    style M fill:#bbf,stroke:#333,stroke-width:2px
-``` 
+```
 
 The flowchart visually represents the entire data processing pipeline, highlighting the sequential nature of the MATLAB scripts and their key inputs and outputs.
 
@@ -100,7 +97,6 @@ comb_dat.m
 nod2tri.m
 quadconn.m
 freg_axpf2_AD.m
-
 ```
 
 ---
