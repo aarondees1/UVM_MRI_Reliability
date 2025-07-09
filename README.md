@@ -27,7 +27,7 @@ The scripts in this repository must be executed in the following order to ensure
 
 ```mermaid
 graph TD
-    A[MRI Scans] --> B{OsiriX Digitization}
+    A[MRI Scans] --> B[OsiriX Digitization]
     B --> C[Raw Data CSVs]
 
     C --> D(Create Tibia Bone Meshes - tibias08b_AD.m)
