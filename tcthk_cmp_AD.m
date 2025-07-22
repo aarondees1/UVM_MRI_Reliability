@@ -519,6 +519,7 @@ for i=1:ns % Loop through each subject
     %
     axlim=axis; % Get current axis limits
     plot([reg_lat1_all reg_lat1_all],[axlim(4) 0],"k",'LineWidth',1.5); % Plot first lateral division line
+    plot([reg_lat2_all reg_lat2_all],[axlim(4) 0],"k",'LineWidth',1.5); % Plot second lateral division line
     plot([reg_med1_all reg_med1_all],[0 axlim(3)],"k",'LineWidth',1.5); % Plot first medial division line
     plot([reg_med2_all reg_med2_all],[0 axlim(3)],"k",'LineWidth',1.5); % Plot second medial division line
     %
